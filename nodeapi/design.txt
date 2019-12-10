@@ -1,0 +1,13 @@
+series: 
+    image:
+    name:
+    created_by:
+    created_at:
+    posts:
+
+post:
+    series:
+
+forum: 
+
+Problem in Update series

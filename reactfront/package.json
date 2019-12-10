@@ -1,0 +1,70 @@
+{
+  "name": "reactfront",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@trendmicro/react-sidenav": "^0.4.5",
+    "bootstrap": "^4.3.1",
+    "draft-js": "^0.10.4",
+    "draft-js-export-html": "^1.4.1",
+    "draft-js-image-plugin": "^2.0.7",
+    "draft-js-import-html": "^1.4.1",
+    "draft-js-plugins-editor": "^3.0.0",
+    "emotion": "^10.0.23",
+    "moment": "^2.24.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.12.0",
+    "react-accessible-accordion": "^3.0.1",
+    "react-addons-update": "^15.6.2",
+    "react-click-outside": "github:tj/react-click-outside",
+    "react-dom": "^16.12.0",
+    "react-emoji": "^0.5.0",
+    "react-emoji-render": "^1.1.0",
+    "react-froala-wysiwyg": "^3.0.6",
+    "react-html-parser": "^2.0.2",
+    "react-image-file-resizer": "^0.2.1",
+    "react-lazyload": "^2.6.5",
+    "react-moment": "^0.9.6",
+    "react-notifications": "^1.4.3",
+    "react-quill": "^1.3.3",
+    "react-router-dom": "^5.1.2",
+    "react-rte": "^0.16.1",
+    "react-scripts": "3.2.0",
+    "react-show-more-text": "^1.2.3",
+    "react-snackbar-alert": "^2.1.0",
+    "react-textarea-autosize": "^7.1.2",
+    "react-timeago": "^4.4.0",
+    "react-toast-notifications": "^2.4.0",
+    "react-toastify": "^5.4.1",
+    "react-truncate": "^2.4.0",
+    "sanitize-html-react": "^1.13.0",
+    "slate": "^0.50.4",
+    "slate-editor": "^5.1.1",
+    "slate-history": "^0.50.5",
+    "slate-react": "^0.50.5",
+    "styled-components": "^4.4.1",
+    "toasted-notes": "^3.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

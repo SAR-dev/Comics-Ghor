@@ -1,0 +1,84 @@
+#COMMENTS textarea {
+  font-size: 14px;
+}
+
+#COMMENTS .fs-small-header {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 5px;
+}
+
+#COMMENTS #image-input {
+  display: none;
+}
+
+#COMMENTS .image-input-label {
+  padding: 30px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  border-radius: 5px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+#COMMENTS .image-uploaded {
+  margin-right: 10px;
+}
+
+#COMMENTS .image-uploaded img {
+  border-radius: 5px;
+  height: 86px;
+  width: 78px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+#COMMENTS form {
+  border-bottom: 1px solid #dee2e6;
+}
+
+#COMMENTS .uploaded-comments {
+  margin: 10px;
+}
+
+#COMMENTS .uploaded-comments ul li {
+  padding-bottom: 15px;
+  padding-top: 15px;
+  border-bottom: 1px dashed #ccc;
+}
+
+#COMMENTS .uploaded-comments ul li .img-circle {
+  border-radius: 50%;
+  height: 65px;
+  width: 65px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 3px solid #ccc;
+}
+
+#COMMENTS .uploaded-comments ul li .name {
+  color: #00d1b2;
+}
+
+#COMMENTS .uploaded-comments ul li .text {
+  color: #575757;
+  font-size: 14px;
+}
+
+#COMMENTS .uploaded-comments ul li .comment-image img {
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+#COMMENTS .uploaded-comments ul li .pre-line {
+  white-space: pre-line !important;
+}
+
+#COMMENTS .uploaded-comments ul li .comment-delete {
+  margin: 5px 0 0 0;
+  padding: 0px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #9e9e9e;
+}
+/*# sourceMappingURL=Comment.css.map */
