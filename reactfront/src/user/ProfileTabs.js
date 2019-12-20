@@ -72,7 +72,7 @@ class ProfileTabs extends Component {
         const { active, users } = this.state
         return (
             <div className="container">
-                <div className="row my-5 profile-btn-list justify-content-center">
+                <div className="row my-5 profile-btn-list justify-content-around">
                     <button className={active === 1 ? "btn btn-sm active" : "btn btn-sm"} onClick={this.switchToFollower}>Followers</button>
                     <button className={active === 2 ? "btn btn-sm active" : "btn btn-sm"} onClick={this.switchToFollowing}>Following</button>
                     {isAuthenticated().user && isAuthenticated().user._id === user._id && (
@@ -140,7 +140,7 @@ class ProfileTabs extends Component {
                 {this.state.active === 3 && (
                     <div className="row">
                         {posts.map((post, i) => (
-                            <Link to={`/post/${post._id}`} className="text-decoration-none text-muted col-12 mb-3" style={{ padding: "15px", background: "white", border: "1px solid #fff", boxShadow: "0 0 3px #ccc", borderRadius: "10px", width: "100%" }} key={i}>
+                            <Link to={`/post/${post._id}`} className="text-decoration-none text-muted col-12 mb-3" style={{ padding: "15px", background: "white", border: "1px solid #ccc", borderRadius: "10px", width: "100%" }} key={i}>
                                 <div>
                                     <h5 className="lead">{post.title}</h5>
                                 </div>

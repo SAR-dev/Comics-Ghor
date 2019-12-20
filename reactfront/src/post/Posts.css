@@ -20,7 +20,7 @@
   font-size: 11px;
   color: #00d1b2;
   letter-spacing: 2px;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 #POSTS .post-card .card-body a {
@@ -86,6 +86,16 @@
 
 #POSTS .post-card .card-body .like i {
   color: #ff3860;
-  font-size: 30px;
+  font-size: 20px;
+  padding: 5px 5px 4px 5px;
+  border: 2px solid #ff3860;
+  border-radius: 50%;
+}
+
+#POSTS .post-card .card-body .like .likes-counter {
+  font-size: 20px;
+  position: absolute;
+  margin-left: 5px;
+  color: #ff3860;
 }
 /*# sourceMappingURL=Posts.css.map */

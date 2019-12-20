@@ -1,7 +1,0 @@
-Apply fontawesome emoticons
-photo edit
-characters counter
-no of followers in profile page
-normal post
-category
-discussion

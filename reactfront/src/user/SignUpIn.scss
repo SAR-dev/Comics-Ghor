@@ -1,0 +1,57 @@
+.sign {
+	.card {
+		.card-body {
+			.card-title {
+				color: #333333;
+				font-weight: 600;
+			}
+			.card-text {
+				color: #52565e;
+			}
+			.social-btn {
+				text-align: center;
+				.btn-google {
+					border: 2px solid rgb(121, 121, 121) !important;
+					color: rgb(121, 121, 121) !important;
+					box-shadow: rgba(0, 0, 0, 0.0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.0) 0px 0px 0px 0px !important;
+					border-radius: 5px !important;
+					div {
+						background: transparent !important;
+					}
+				}
+				.btn-facebook {
+					background: #3b5998;
+				}
+			}
+			form {
+				.is-invalid {
+					border-color: #ced4da !important;
+					&:focus {
+						border-color: #ced4da !important;
+						-webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+						-moz-box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+						box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+					}
+				}
+				.is-valid {
+					border-color: #ced4da !important;
+					&:focus {
+						border-color: #ced4da !important;
+						-webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+						-moz-box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+						box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+					}
+                }
+                .valid-feedback {
+                    color: #1793d1;
+                }
+                .invalid-feedback {
+                    color: #52565e;
+                }
+            }
+            .sign-in-check {
+                color: #52565e;
+            }
+		}
+	}
+}

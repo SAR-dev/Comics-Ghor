@@ -4,6 +4,7 @@ import { imageupload, create, listSeries } from './apiPost';
 import { Redirect } from 'react-router-dom';
 import Uploading from '../images/uploading.gif';
 import CEditor from './Editor';
+import './Editor.css';
 
 class NewPost extends Component {
     constructor() {
@@ -49,7 +50,7 @@ class NewPost extends Component {
     };
 
     handleBody = (htmldata) => {
-        if(htmldata.length < 10 || htmldata.length > 20000) {
+        if(htmldata.length < 20 || htmldata.length > 20000) {
             this.setState({ bodyError: true, body: htmldata })
             this.postData.set('body', htmldata)
         } else {
@@ -135,34 +136,36 @@ class NewPost extends Component {
     createPost = (series, title, body, image, titleError, bodyError, imageError, error, uploading, loading, user, redirectToHome) => (
         <form>
             <div className="form-group row pb-2">
-                <label htmlFor="title" className="create-post-label">Give an awesome title!</label>
+                <label htmlFor="title" className="text-info fs-small fw-700 mb-1">Give an awesome title!</label>
                 <input id="title" value={title} onChange={this.handleTitle("title")} className={titleError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} type="text" style={{backgroundImage: "none", boxShadow: "none"}} />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Title is required and should not exceed 100 characters</div>
             </div>
             <div className="row mb-4">
                 <div className="col-12" style={{padding: "0px"}}>
-                <label className="create-post-label">Write something awesome</label>
+                <label className="text-info fs-small fw-700 mb-1">Write something awesome</label>
                 <CEditor 
                     data ={this.handleBody.bind(this)} 
                 />
-                <div className={ bodyError ? "d-none" : "img-error-check-success ml-1" }>Looks good!</div>
-                <div className={ bodyError ? "img-error-check-fail ml-1" : "d-none" }>Body is required</div>
+                <div className={ bodyError ? "d-none" : "body-error-none ml-1" }>Looks good!</div>
+                <div className={ bodyError ? "body-error ml-1" : "d-none" }>Body is required</div>
                 </div>
             </div>
 
             <div className="form-group row">
-                <label htmlFor="dropdownSelect" className="create-post-label">Select Series</label>
+                <label htmlFor="dropdownSelect" className="text-info fs-small fw-700 mb-1">Select Series</label>
                 <select className="form-control form-control-sm" id="dropdownSelect" value={this.state.seriesOf} onChange={this.handleSeriesOf}>
                     <option disabled style={{display: "none"}}></option>
                     {series.map((item, i) => {
                         return (<option value={item._id} key={i}>{item.name}</option>)
                     })}
                 </select>
-                <div className={ this.state.seriesOf ? "img-error-check-success" : "d-none"} style={{marginLeft: "1px"}}>Looks good!</div>
-                <div className={ this.state.seriesOf ? "d-none" : "img-error-check-fail" } style={{marginLeft: "1px"}}>Select a series</div>
+                <div className={ this.state.seriesOf ? "body-error-none" : "d-none"} style={{marginLeft: "1px"}}>Looks good!</div>
+                <div className={ this.state.seriesOf ? "d-none" : "body-error" } style={{marginLeft: "1px"}}>Select a series</div>
             </div>
-
+            <div className="row">
+                <small className="text-info fs-small fw-700 mb-1">Upload images</small>
+            </div>
             <div className="row mb-1">
                 {image.map((image, i) => {
                     return (
@@ -180,8 +183,8 @@ class NewPost extends Component {
                 <input type="file" accept="image/*" onChange={this.handleImage} id="image-input" className={imageError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} />      
                 </div>
             </div>
-            <div className={imageError ? "d-none" : "img-error-check-success mb-3"}>Looks good!</div>
-            <div className={imageError ? "img-error-check-fail mb-3" : "d-none"}>Please upload a valid image with size less than 20MB</div>
+            <div className={imageError ? "d-none" : "row body-error-none mb-3"}>Looks good!</div>
+            <div className={imageError ? "row body-error mb-3" : "d-none"}>Please upload a valid image with size less than 20MB</div>
 
             <div className="form-group row">
                 <button
@@ -216,7 +219,7 @@ class NewPost extends Component {
             <>
                 <div className="container new-post">
                     <div className="row">
-                        <div className="col-8 my-5">
+                        <div className="col-lg-8 col-md-10 col-11 my-5 mx-auto">
                             {this.createPost (series, title, body, image, titleError, bodyError, imageError, error, uploading, loading, user, redirectToHome)}
                         </div>
                     </div>

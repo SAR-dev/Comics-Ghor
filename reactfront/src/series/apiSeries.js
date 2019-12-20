@@ -28,3 +28,48 @@ export const imageupload = (img) => {
         })
         .catch(err => console.log(err))
 };
+
+export const list = () => {
+    return fetch(`${process.env.REACT_APP_API_URL}/series`, {
+        method: "GET"
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const seriesById = (seriesId) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/series/${seriesId}`, {
+        method: "GET"
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+};
+
+export const seriesDataById = (seriesDataId) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/posts/series/${seriesDataId}`, {
+        method: "GET"
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+};
+
+export const update = (seriesId, token, series) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/series/${seriesId}`, {
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: series
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => console.log(err))
+};

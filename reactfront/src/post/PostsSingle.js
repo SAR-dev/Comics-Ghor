@@ -12,13 +12,16 @@ export default class PostsSingle extends Component {
         this.state = {
             like: false,
             redirectToSignin: false,
+            likes: ""
         }
 
     }
 
     componentDidMount() {
+        window.scrollTo(0, 0)
         this.setState({
-            like: this.checkLike(this.props.post.likes)
+            like: this.checkLike(this.props.post.likes),
+            likes: this.props.post.likes.length
         })
     }
 
@@ -54,6 +57,7 @@ export default class PostsSingle extends Component {
                     this.setState({
                         like: !this.state.like,
                     })
+                    this.state.like ? this.setState({likes: this.state.likes+1}) : this.setState({likes: this.state.likes-1})
                 }
             })
     };
@@ -66,7 +70,7 @@ export default class PostsSingle extends Component {
         }
 
         return (
-            <div className="card-body">
+            <div className="card-body bg-light">
                 <div className="row">
                     <div className={post.image.length > 0 ? "col-md-7 col-sm-12 pt-2" : "col-md-12 col-sm-12 pt-2"}>
                         <span className="card-series">{postSeriesof}</span>
@@ -94,7 +98,6 @@ export default class PostsSingle extends Component {
                     </div>
                 </div>
 
-
                 <div className="row card-user mt-2">
                     <div className="col-7">
                         <div className="card-avatar float-left">
@@ -110,6 +113,7 @@ export default class PostsSingle extends Component {
                     <div className="col-5 text-center">
                         <button onClick={this.likeToogle} className="mt-1 d-inline btn btn-small px-5 btn-light bg-light btn-block like">
                             <i className={this.state.like ? "fas fa-heart" : "far fa-heart"}></i>
+                            <span className="likes-counter">{this.state.likes}</span>
                         </button>
                     </div>
                 </div>

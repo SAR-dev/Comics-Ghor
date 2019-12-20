@@ -20,7 +20,7 @@ class Menu extends Component {
                     this.setState({ expanded: false });
                 }}>
                 <SideNav
-                    style={{ position: "fixed" }}
+                    className="sidenav"
                     expanded={this.state.expanded}
                     onToggle={(expanded) => {
                         this.setState({ expanded });
@@ -35,6 +35,15 @@ class Menu extends Component {
                                 <i className="fas fa-home"></i>
                             </NavIcon>
                             <NavText> Home </NavText>
+                        </NavItem>
+
+                        <NavItem
+                            onClick={() => this.props.history.push("/series")}
+                            active={this.props.history.location.pathname === "/series" ? true : false}>
+                            <NavIcon>
+                                <i className="fas fa-layer-group"></i>
+                            </NavIcon>
+                            <NavText> Series </NavText>
                         </NavItem>
 
                         {isAuthenticated() && (
@@ -60,10 +69,10 @@ class Menu extends Component {
                             </NavItem>
 
                             <NavItem
-                                onClick={() => this.props.history.push("/series/create")}
-                                active={this.props.history.location.pathname === "/series/create" ? true : false}>
+                                onClick={() => this.props.history.push("/series/new/create")}
+                                active={this.props.history.location.pathname === "/series/new/create" ? true : false}>
                                 <NavIcon>
-                                    <i className="fas fa-layer-group"></i>
+                                    <i className="fas fa-book-medical"></i>
                                 </NavIcon>
                                 <NavText>Create Series</NavText>
                             </NavItem>

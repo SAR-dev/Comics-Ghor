@@ -5,7 +5,8 @@ const _ = require('lodash');
 
 exports.getSeries = (req, res) => {
     const series = Series.find()
-        .select('_id name image createdBy')
+        .populate("createdBy", "_id name avatar Sinstagram Sfacebook Stwitter Syoutube")
+        .select('_id name image summary createdBy')
         .then((series) => {
             res.json({ series })
         })
@@ -69,9 +70,10 @@ exports.isCreator = (req, res, next) => {
 
 exports.seriesById = (req, res, next, id) => {
     Series.findById(id)
-        .populate("createdBy", "_id name image")
+        .populate("createdBy", "_id name avatar")
+        .select('_id name image summary created createdBy')
         .exec((err, series) => {
-            if(err || !series) {
+            if (err || !series) {
                 return res.status(400).json({
                     error: err
                 })
@@ -79,6 +81,10 @@ exports.seriesById = (req, res, next, id) => {
             req.series = series;
             next();
         })
+};
+
+exports.singleSeries = (req, res) => {
+    return res.json(req.series);
 };
 
 exports.deleteSeries = (req, res) => {
@@ -96,16 +102,46 @@ exports.deleteSeries = (req, res) => {
 };
 
 exports.updateSeries = (req, res, next) => {
-    let series = req.series;
-    series = _.extend(series, req.body);
-    series.updated = Date.now();
-    series.save((err) => {
-        if(err) {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
+        if (err) {
             return res.status(400).json({
-                error: err
-            })
+                error: 'Photo could not be uploaded'
+            });
         }
-        res.json(series);
-    })
+        // save series
+        let series = req.series;
+        series = _.extend(series, fields);
+        series.updated = Date.now();
+
+        if (files.photo) {
+            series.photo.data = fs.readFileSync(files.photo.path);
+            series.photo.contentType = files.photo.type;
+        }
+
+        series.save((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            res.json(series);
+        });
+    });
 };
+
+// exports.updateSeries = (req, res, next) => {
+//     let series = req.series;
+//     series = _.extend(series, req.body);
+//     series.updated = Date.now();
+//     series.save((err) => {
+//         if(err) {
+//             return res.status(400).json({
+//                 error: err
+//             })
+//         }
+//         res.json(series);
+//     })
+// };
 

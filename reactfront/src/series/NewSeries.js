@@ -3,6 +3,7 @@ import { isAuthenticated } from '../auth/auth';
 import { imageupload, create } from './apiSeries';
 import { Redirect } from 'react-router-dom';
 import Uploading from '../images/uploading.gif';
+import '../post/Editor.css';
 
 class NewSeries extends Component {
     constructor() {
@@ -39,7 +40,7 @@ class NewSeries extends Component {
     };
 
     handleSummary = () => (event) => {
-        if (event.target.value.length < 1 || event.target.value.length > 100) {
+        if (event.target.value.length < 1) {
             this.setState({ summaryError: true, summary: event.target.value})
             this.postData.set('summary', event.target.value)
         } else {
@@ -122,11 +123,13 @@ class NewSeries extends Component {
 
             <div className="form-group row pb-2">
                 <small className="text-info fs-small fw-700 mb-1">Write a summary</small>
-                <textarea rows="5" value={summary} onChange={this.handleSummary("summary")} className={summaryError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} placeholder="Start writing..." type="text" style={{boxShadow: "none"}} />
+                <textarea rows="5" id="summary" value={summary} onChange={this.handleSummary("summary")} className={summaryError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} placeholder="Start writing..." type="text" style={{boxShadow: "none"}} />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Do you really want to leave it empty?</div>
             </div>
-            
+            <div className="row">
+                <small className="text-info fs-small fw-700 mb-1">Upload a cover photo for your series</small>
+            </div>
             <div className="row mb-1">
                 {image.length > 1 && (
                         <div className="col-2 px-0 mr-2">
@@ -143,8 +146,8 @@ class NewSeries extends Component {
                 <input type="file" accept="image/*" onChange={this.handleImage} id="image-input" className={imageError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} />      
                 </div>
             </div>
-            <div className={imageError ? "d-none" : "img-error-check-success mb-3"}>Looks good!</div>
-            <div className={imageError ? "img-error-check-fail mb-3" : "d-none"}>Please upload a valid image with size less than 20MB</div>
+            <div className={imageError ? "d-none" : "row body-error-none mb-3"}>Looks good!</div>
+            <div className={imageError ? "row body-error mb-3" : "d-none"}>Please upload a valid image with size less than 20MB</div>
 
             <div className="form-group row">
                 <button
@@ -179,7 +182,7 @@ class NewSeries extends Component {
             <>
                 <div className="container new-post">
                     <div className="row">
-                        <div className="col-8 my-5">
+                        <div className="col-lg-8 col-md-10 col-11 mx-auto my-5">
                             {this.createPost (name, summary, image, nameError, summaryError, imageError, error, uploading, loading, user, redirectToHome)}
                         </div>
                     </div>

@@ -78,7 +78,7 @@
 
 #SINGLEPOST .card-body .like button {
   border-radius: 10px;
-  border: 2px solid rgba(204, 204, 204, 0.25);
+  border: 1px solid #ccc;
 }
 
 #SINGLEPOST .card-body .like i {

@@ -3,6 +3,7 @@ import { isAuthenticated } from '../auth/auth';
 import { read, update, imageupload, updateUser } from './apiUser';
 import { Redirect } from 'react-router-dom';
 import Loading from '../images/loading.jpg';
+import './EditProfile.css';
 
 class EditProfile extends Component {
     constructor() {
@@ -47,18 +48,19 @@ class EditProfile extends Component {
                 if (data.error) {
                     this.setState({ redirectToProfile: true })
                 } else {
-                    this.setState({ id: data._id, 
-                                    name: data.name, 
-                                    email: data.email, 
-                                    created: data.created, 
-                                    avatar: data.avatar, 
-                                    cover: data.cover, 
-                                    about: data.about,
-                                    Sinstagram: data.Sinstagram,
-                                    Sfacebook: data.Sfacebook,
-                                    Stwitter: data.Stwitter,
-                                    Syoutube: data.Syoutube
-                                })
+                    this.setState({
+                        id: data._id,
+                        name: data.name,
+                        email: data.email,
+                        created: data.created,
+                        avatar: data.avatar,
+                        cover: data.cover,
+                        about: data.about,
+                        Sinstagram: data.Sinstagram,
+                        Sfacebook: data.Sfacebook,
+                        Stwitter: data.Stwitter,
+                        Syoutube: data.Syoutube
+                    })
                 }
             })
     };
@@ -81,16 +83,16 @@ class EditProfile extends Component {
     };
 
     handleAbout = (about) => (event) => {
-        if (event.target.value.length <1 ) {
+        if (event.target.value.length < 1) {
             this.setState({ aboutError: true, about: event.target.value })
         } else {
             this.setState({ aboutError: false, about: event.target.value })
         }
     };
 
-   handleSocial = (i) => (event) => {
-        this.setState({[i]: event.target.value})
-   }
+    handleSocial = (i) => (event) => {
+        this.setState({ [i]: event.target.value })
+    }
 
     handleAvatar(event) {
         this.setState({ uploading: true })
@@ -270,7 +272,7 @@ class EditProfile extends Component {
                 <button
                     onClick={this.clickSubmit}
                     className={loading ? "d-none" : "btn btn-sm btn-primary"}
-                    disabled={nameError || emailError || passwordError || !name || !email || avatarError || coverError? true : false}
+                    disabled={nameError || emailError || passwordError || !name || !email || avatarError || coverError ? true : false}
                 > Update
                 </button>
                 <button
@@ -300,23 +302,26 @@ class EditProfile extends Component {
             <>
                 <div className="container px-0">
                     <div className="row">
-                        <div className="col-6 bg-white full-screen">
+                        <div className="col-12 col-lg-6 bg-white full-screen">
                             <div className="row cover-photo">
                                 <img src={`https://i.imgur.com/${cover}h.png`} />
                             </div>
                             <div className="row profile-photo">
                                 <img src={`https://i.imgur.com/${avatar}m.png`} />
-                                <div>
+                                <div className="profile-footer">
                                     <p className="username text-primary">{name}</p>
                                     <p className="email text-muted"><i className="material-icons">email</i> <span>{email} </span></p>
-                                    <small className="joined text-muted"><i className="material-icons">add_circle</i> <span> {`Joined ${new Date(created).toDateString()}`}</span></small>
+                                    <p className="joined text-muted">
+                                        <i className="material-icons">add_circle</i>
+                                        <span>{`Joined ${new Date(created).getFullYear()}`}</span>
+                                    </p>
                                 </div>
                             </div>
                             {about && (
-                            <div className="about-yourself mx-3 my-4">
-                                <h6 className="text-primary"><i className="fas fa-theater-masks mr-2 text-primary"></i>ABOUT ME</h6>
-                                <p className="text-muted">{about}</p>
-                            </div>
+                                <div className="about-yourself mx-3 my-4">
+                                    <h6 className="text-primary"><i className="fas fa-theater-masks mr-2 text-primary"></i>ABOUT ME</h6>
+                                    <p className="text-muted">{about}</p>
+                                </div>
                             )}
                             <div className="d-flex my-2 mx-3 social-icons justify-content-start">
                                 {Sinstagram && (<a className="text-primary mr-3" href={`${Sinstagram}`} target="_blank"><i className="fab fa-instagram"></i></a>)}
@@ -325,7 +330,7 @@ class EditProfile extends Component {
                                 {Syoutube && (<a className="text-primary mr-3" href={`${Syoutube}`} target="_blank"><i className="fab fa-youtube"></i></a>)}
                             </div>
                         </div>
-                        <div className="col-6 bg-white p-5">
+                        <div className="col-12 col-lg-6 bg-white p-5">
                             {this.updateForm(name, email, password, avatar, cover, Sinstagram, Sfacebook, Stwitter, Syoutube, nameError, emailError, passwordError, avatarError, coverError, about, aboutError, loading)}
                         </div>
                     </div>
@@ -350,8 +355,8 @@ class EditProfile extends Component {
                 <div className={uploading ? "loading-state modal fade show d-block blurred" : "modal fade"} tabIndex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
-                            <div className="modal-body" style={{background: "transparent", border: "none", textAlign: "center"}}>
-                                <img src={Loading} style={{height: "300px"}}/>
+                            <div className="modal-body" style={{ background: "transparent", border: "none", textAlign: "center" }}>
+                                <img src={Loading} style={{ height: "300px" }} />
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AACI,eADW,CACX,EAAE,CAAC;EACC,KAAK,EAAE,KAAK;EACZ,UAAU,EAAE,OAAO;EACnB,aAAa,EAAE,GAAG;CACrB;;AAEL,AAAA,eAAe,CAAC;EACZ,KAAK,EAAE,KAAK;EACR,UAAU,EAAE,OAAO;EACnB,aAAa,EAAE,GAAG;CACzB",
+    "sources": [
+        "SingleSeries.scss"
+    ],
+    "names": [],
+    "file": "SingleSeries.css"
+}

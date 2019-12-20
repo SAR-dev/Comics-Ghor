@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Tick from '../images/tick.gif';
 import { Link } from 'react-router-dom';
 import { signup } from '../auth/auth';
+import SocialLogin from "./SocialLogin";
+import './SignUpIn.css';
 
 class Signup extends Component {
     constructor() {
@@ -81,7 +83,7 @@ class Signup extends Component {
                 <div className="input-group-prepend">
                     <span className="input-group-text"> <i className="fa fa-user"></i> </span>
                 </div>
-                <input value={ name } onChange={ this.handleName("name") } className={ nameError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Username" type="text" />
+                <input spellcheck="false" value={ name } onChange={ this.handleName("name") } className={ nameError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Username" type="text" />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Username should contain 3 to 20 characters</div>
             </div>
@@ -89,7 +91,7 @@ class Signup extends Component {
                 <div className="input-group-prepend">
                     <span className="input-group-text"> <i className="fa fa-envelope"></i> </span>
                 </div>
-                <input value={email} onChange={ this.handleEmail("email") }  className={ emailError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Email address" type="email" />
+                <input spellcheck="false" value={email} onChange={ this.handleEmail("email") }  className={ emailError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Email Address" type="email" />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Please provide a valid email</div>
             </div>
@@ -97,7 +99,7 @@ class Signup extends Component {
                 <div className="input-group-prepend">
                     <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
                 </div>
-                <input value={password} onChange={ this.handlePassword("password") }  className={ passwordError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Create password" type="password" />
+                <input spellcheck="false" value={password} onChange={ this.handlePassword("password") }  className={ passwordError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Create Password" type="password" />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Password must contain at least 6 characters and 1 number</div>
             </div>                                   
@@ -117,7 +119,7 @@ class Signup extends Component {
                     Checking...
                 </button>
             </div>    
-            <p className="text-center">Have an account? <Link to="/signin" style={{textDecoration: "none"}}>Sign In</Link> </p>
+            <p className="text-center sign-in-check">Have an account? <Link to="/signin" style={{textDecoration: "none"}}>Sign In</Link> </p>
         </form>
      );
 
@@ -127,18 +129,12 @@ class Signup extends Component {
             <>
             <div className="container">
                 <div className="row justify-content-center">
-                <div className={ this.state.created ? "d-none" : "col-6 sign my-5" }>
+                <div className={ this.state.created ? "d-none" : "col-lg-6 col-md-8 col-12 sign my-5" }>
                     <div className="card bg-light">
-                        <article className="card-body mx-auto" style={{width: "80%"}}>
-                            <h4 className="card-title mt-3 text-center">Sign Up</h4>
-                            <p className="text-center">Get started with your free account</p>
-                            <p>
-                                <a href="" className="btn btn-twitter"> <i className="fab fa-twitter"></i> Sign in with Twitter</a>
-                                <a href="" className="btn btn-facebook float-right"> <i className="fab fa-facebook-f"></i> Sign in with Facebook</a>
-                            </p>
-                            <p className="divider-text">
-                                <span className="bg-light">OR</span>
-                            </p>
+                        <article className="card-body mx-auto" style={{width: "90%"}}>
+                            <h4 className="card-title mt-3 text-center">JOIN US!</h4>
+                            <p className="card-text text-center">Get started with your free account</p>
+                            <SocialLogin />
                             { this.signupForm( name, email, password, loading, nameError, emailError, passwordError ) }
                         </article>
                     </div>

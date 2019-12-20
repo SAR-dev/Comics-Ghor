@@ -1,0 +1,76 @@
+.series-card {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.series-card .cover img {
+  width: 100%;
+  height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 5px;
+}
+
+.series-card .summary h5 {
+  margin: 10px;
+  font-size: 25px;
+  color: #52565e;
+}
+
+.series-card .summary .pre-line {
+  color: #525252;
+  margin-left: 10px;
+  margin-right: 20px;
+  font-size: 13px;
+  text-align: justify;
+}
+
+.series-card .summary .pre-line br {
+  display: none;
+}
+
+.series-card .summary .pre-line a {
+  text-decoration: none;
+}
+
+.series-card .writer {
+  margin-left: 10px;
+}
+
+.series-card .writer .author {
+  color: #41494d;
+  font-weight: 600;
+}
+
+.series-card .writer .avatar img {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  border: 3px solid #ccc;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.series-card .writer .name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #41494d;
+  margin-left: 5px;
+}
+
+.series-card .writer .social-icons .fab {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.series-card .pre-line {
+  white-space: pre-line !important;
+}
+
+.series-card .Explore {
+  position: absolute;
+  right: 0;
+  margin-right: 10px;
+}
+/*# sourceMappingURL=Series.css.map */

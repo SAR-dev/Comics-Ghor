@@ -1,0 +1,39 @@
+.new-post {
+	#title, #name, .is-invalid {
+		border-color: #a6acb6 !important;
+	}
+	.invalid-feedback {
+		color: #52565e;
+	}
+	.CEditor {
+		border-color: #a6acb6;
+	}
+	#dropdownSelect {
+		border: 1px solid #a6a6b6;
+		-webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+		-moz-box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+		box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+	}
+	.body-error {
+		font-size: 80%;
+		margin-top: .25rem;
+	}
+	.body-error-none {
+		font-size: 80%;
+		margin-top: .25rem;
+		color: #28a745;
+	}
+	.image-del {
+        position: absolute;
+        margin-left: -30px;
+	}
+	.camera {
+		padding: 55px;
+		border: 1px solid #a6a6b6;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+	#image-input {
+		display: none;
+	}
+}

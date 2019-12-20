@@ -1,0 +1,45 @@
+.new-post #title, .new-post #name, .new-post .is-invalid {
+  border-color: #a6acb6 !important;
+}
+
+.new-post .invalid-feedback {
+  color: #52565e;
+}
+
+.new-post .CEditor {
+  border-color: #a6acb6;
+}
+
+.new-post #dropdownSelect {
+  border: 1px solid #a6a6b6;
+  -webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0), 0 0 0px rgba(0, 0, 0, 0);
+}
+
+.new-post .body-error {
+  font-size: 80%;
+  margin-top: .25rem;
+}
+
+.new-post .body-error-none {
+  font-size: 80%;
+  margin-top: .25rem;
+  color: #28a745;
+}
+
+.new-post .image-del {
+  position: absolute;
+  margin-left: -30px;
+}
+
+.new-post .camera {
+  padding: 55px;
+  border: 1px solid #a6a6b6;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.new-post #image-input {
+  display: none;
+}
+/*# sourceMappingURL=Editor.css.map */

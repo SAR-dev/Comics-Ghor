@@ -229,3 +229,21 @@ exports.uncomment = (req, res) => {
         }
     })
 };
+
+exports.getPostsBySeries = (req, res, next, id) => {
+    Post.find({ seriesOf: id })
+        .select('_id title created')
+        .exec((err, posts) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            req.posts = posts;
+            next();
+        })
+};
+
+exports.postsBySeries = (req, res) => {
+    return res.json(req.posts);
+};

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { singlePost, remove, like, unlike } from './apiPost';
 import LazyLoad from 'react-lazyload';
 import { Link, Redirect } from "react-router-dom";
-import uploading from '../images/uploading.gif';
+import Loading from '../images/loading.jpg';
 import { isAuthenticated } from '../auth/auth';
 import Comment from './Comment';
 import './SinglePost.css';
@@ -57,13 +57,13 @@ class SinglePost extends Component {
     };
 
     componentDidMount() {
+        window.scrollTo(0, 0)
         const postId = this.props.match.params.postId
         singlePost(postId)
             .then(data => {
                 if (data.error) {
                     console.log(data.error)
                 } else {
-                    console.log(data.comments)
                     const image = data.image[0] ? data.image[0].split(',') : undefined
                     this.setState({
                         _id: data._id,
@@ -122,7 +122,7 @@ class SinglePost extends Component {
             <>
                 <div className="container" id="SINGLEPOST">
                     <div className="row my-5">
-                        <div className="post-card col-lg-8 col-sm-12 single-post-div">
+                        <div className="post-card col-lg-8 col-sm-12 single-post-div bg-light">
                             <div className="card-body">
                                 <span className="card-series">{seriesName}</span>
                                 {isAuthenticated().user && isAuthenticated().user._id === postedBy._id && <>
@@ -200,9 +200,9 @@ class SinglePost extends Component {
 
                 <div className={loading ? "loading-state modal fade show d-block blurred" : "modal fade"} tabIndex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
                     <div className="modal-dialog" role="document">
-                        <div className="modal-content" style={{border: "1px solid whitesmoke"}}>
-                            <div className="modal-body" style={{ background: "white", border: "none", textAlign: "center" }}>
-                                <img src={uploading} style={{ height: "150px" }} />
+                        <div className="modal-content">
+                            <div className="modal-body" style={{ background: "transparent", border: "none", textAlign: "center" }}>
+                                <img src={Loading} style={{ height: "300px" }} />
                             </div>
                         </div>
                     </div>
