@@ -1,6 +1,5 @@
 .series-card {
 	border-radius: 5px;
-	border: 1px solid #ccc;
 	margin-bottom: 15px;
 	.cover {
 		img {
@@ -48,7 +47,9 @@
         .name {
             font-size: 14px;
             font-weight: 600;
-			color: rgb(65, 73, 77);
+			a {
+				color: rgb(65, 73, 77) !important;
+			}
 			margin-left: 5px;
         }
         .social-icons {
@@ -65,5 +66,13 @@
 		position: absolute;
 		right: 0;
 		margin-right: 10px;
+		.btn {
+			background-color: #00d1b2 !important;
+			border-color: #00d1b2;
+			&:active {
+				background-color: #00d1b2 !important;
+				border-color: #00d1b2;
+			}
+		}
 	}
 }

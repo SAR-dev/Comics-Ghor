@@ -3,6 +3,7 @@ import Tick from '../images/tick.gif';
 import { Link } from 'react-router-dom';
 import { signup } from '../auth/auth';
 import SocialLogin from "./SocialLogin";
+import sign from '../images/sign.png';
 import './SignUpIn.css';
 
 class Signup extends Component {
@@ -83,7 +84,7 @@ class Signup extends Component {
                 <div className="input-group-prepend">
                     <span className="input-group-text"> <i className="fa fa-user"></i> </span>
                 </div>
-                <input spellcheck="false" value={ name } onChange={ this.handleName("name") } className={ nameError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Username" type="text" />
+                <input spellCheck="false" value={ name } onChange={ this.handleName("name") } className={ nameError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Username" type="text" />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Username should contain 3 to 20 characters</div>
             </div>
@@ -91,7 +92,7 @@ class Signup extends Component {
                 <div className="input-group-prepend">
                     <span className="input-group-text"> <i className="fa fa-envelope"></i> </span>
                 </div>
-                <input spellcheck="false" value={email} onChange={ this.handleEmail("email") }  className={ emailError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Email Address" type="email" />
+                <input spellCheck="false" value={email} onChange={ this.handleEmail("email") }  className={ emailError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Email Address" type="email" />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Please provide a valid email</div>
             </div>
@@ -99,7 +100,7 @@ class Signup extends Component {
                 <div className="input-group-prepend">
                     <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
                 </div>
-                <input spellcheck="false" value={password} onChange={ this.handlePassword("password") }  className={ passwordError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Create Password" type="password" />
+                <input spellCheck="false" value={password} onChange={ this.handlePassword("password") }  className={ passwordError ? "form-control is-invalid" : "form-control is-valid"} placeholder="Create Password" type="password" />
                 <div className="valid-feedback">Looks good!</div>
                 <div className="invalid-feedback">Password must contain at least 6 characters and 1 number</div>
             </div>                                   
@@ -129,10 +130,15 @@ class Signup extends Component {
             <>
             <div className="container">
                 <div className="row justify-content-center">
+
+                <div className="col-lg-6 d-none d-lg-block">
+                    <img src={sign} className="w-100" style={{marginTop: "100px"}} />
+                </div>
+                
                 <div className={ this.state.created ? "d-none" : "col-lg-6 col-md-8 col-12 sign my-5" }>
                     <div className="card bg-light">
                         <article className="card-body mx-auto" style={{width: "90%"}}>
-                            <h4 className="card-title mt-3 text-center">JOIN US!</h4>
+                            <h4 className="card-title mt-3 text-center">WELCOME TO COMICSGHOR!</h4>
                             <p className="card-text text-center">Get started with your free account</p>
                             <SocialLogin />
                             { this.signupForm( name, email, password, loading, nameError, emailError, passwordError ) }

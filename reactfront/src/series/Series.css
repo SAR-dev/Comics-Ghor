@@ -1,6 +1,5 @@
 .series-card {
   border-radius: 5px;
-  border: 1px solid #ccc;
   margin-bottom: 15px;
 }
 
@@ -55,8 +54,11 @@
 .series-card .writer .name {
   font-size: 14px;
   font-weight: 600;
-  color: #41494d;
   margin-left: 5px;
+}
+
+.series-card .writer .name a {
+  color: #41494d !important;
 }
 
 .series-card .writer .social-icons .fab {
@@ -72,5 +74,15 @@
   position: absolute;
   right: 0;
   margin-right: 10px;
+}
+
+.series-card .Explore .btn {
+  background-color: #00d1b2 !important;
+  border-color: #00d1b2;
+}
+
+.series-card .Explore .btn:active {
+  background-color: #00d1b2 !important;
+  border-color: #00d1b2;
 }
 /*# sourceMappingURL=Series.css.map */

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { findPeople, follow } from './apiUser';
 import { isAuthenticated } from '../auth/auth';
+import Truncate from 'react-truncate';
 import LazyLoad from 'react-lazyload';
 
 class ProfileTabs extends Component {
@@ -140,18 +141,25 @@ class ProfileTabs extends Component {
                 {this.state.active === 3 && (
                     <div className="row">
                         {posts.map((post, i) => (
-                            <Link to={`/post/${post._id}`} className="text-decoration-none text-muted col-12 mb-3" style={{ padding: "15px", background: "white", border: "1px solid #ccc", borderRadius: "10px", width: "100%" }} key={i}>
-                                <div>
-                                    <h5 className="lead">{post.title}</h5>
+                            <Link to={`/post/${post._id}`} className="text-decoration-none text-muted col-12 mb-3" style={{ padding: "10px", background: "white", borderRadius: "5px", width: "100%" }} key={i}>
+                                <div className="container">
+                                    <div className="row">
+                                        <div className={post.image[0] ? "col-8" : "col-12"}>
+                                                <span style={{fontSize: "20px"}}>{post.title.length > 70 ? post.title.slice(0,70).concat('  ...') : post.title}</span>
+                                            <div className="d-block mt-2 justify-content-between">
+                                            <span style={{fontSize: "11px", fontWeight: "600", color: "#ff3860"}}>{post.likes.length} <i className="fas fa-heart" style={{color: "#ff3860"}}></i></span>
+                                                <span className="ml-5" style={{fontSize: "11px", fontWeight: "600", color: "#E0E0E0"}}>{new Date(post.created).toDateString()}</span>
+                                            </div>
+                                        </div>
+                                        <div className="col-4">
+                                        {post.image[0] && (
+                                            <LazyLoad offset={100}>
+                                                <img className="mt-2 w-100" src={`https://i.imgur.com/${this.getFirstImage(post.image[0])}m.png`} style={{borderRadius: "5px", height: "100px", objectFit: "cover"}} />
+                                            </LazyLoad>
+                                        )}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="text-center">
-                                    {post.image[0] && (
-                                        <LazyLoad offset={100}>
-                                            <img className="mt-2" src={`https://i.imgur.com/${this.getFirstImage(post.image[0])}m.png`} style={{borderRadius: "5px", height: "200px", objectFit: "cover"}} />
-                                        </LazyLoad>
-                                    )}
-                                </div>
-                                <span className="mt-1" style={{fontSize: "12px"}}>Posted on {new Date(post.created).toDateString()}</span>
                             </Link>
                         )
                         )}

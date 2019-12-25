@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { resetPassword } from "../auth";
+import reset from '../images/3180820.png';
 
 class ResetPassword extends Component {
     constructor(props) {
@@ -43,7 +44,11 @@ class ResetPassword extends Component {
         return (
             <div className="container">
                 <div className="row">
-                    <div className="col-12 col-lg-8 col-md-10 mx-auto bg-light my-5 py-5" style={{ minHeight: "300px", borderRadius: "10px" }}>
+                <div className="col-lg-6 d-none d-lg-block">
+                    <img src={reset} className="w-100" style={{marginTop: "70px"}} />
+                </div>
+
+                    <div className="col-12 col-lg-6 col-md-10 mx-auto my-5 py-5" style={{ minHeight: "300px", borderRadius: "10px" }}>
                         <h2 className="display-4">HI THERE!</h2>
                         <p className="text-secondary">Welcome to Comics Ghor. Type your new password.</p>
                         {this.state.message && (

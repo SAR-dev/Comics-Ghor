@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Redirect, Link } from 'react-router-dom';
 import { signin, authenticate } from '../auth/auth';
 import SocialLogin from "./SocialLogin";
+import sign from '../images/sign.png';
 import './SignUpIn.css';
 
 class Signin extends Component {
@@ -114,6 +115,10 @@ class Signin extends Component {
             <>
                 <div className="container">
                     <div className="row justify-content-center">
+
+                        <div className="col-lg-6 d-none d-lg-block">
+                            <img src={sign} className="w-100" style={{marginTop: "100px"}} />
+                        </div>
 
                         <div className={this.state.created ? "d-none" : "col-lg-6 col-md-8 col-12 sign my-5"}>
                             <div className="card bg-light">

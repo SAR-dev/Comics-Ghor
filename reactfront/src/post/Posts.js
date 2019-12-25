@@ -28,8 +28,8 @@ class Posts extends Component {
         const { posts } = this.state;
         return (
             <div id="POSTS">
-                <div className="row rounded box-shadow">
-                    <span className="d-block rounded-top text-secondary w-100 fs-small-header pl-4 pt-4">RECENT POSTS</span>
+                <div className="row rounded box-shadow pb-5">
+                    <span className="d-block text-secondary fs-small-header pl-4 pt-4">RECENT POSTS</span>
                     {posts.map((post, i) => (
                         <div className="post-card col-12" key={i}>
                             <PostSingle post={post} />

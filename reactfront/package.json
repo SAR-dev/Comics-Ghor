@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
+    "@sebastianfoth/email-address-existence": "0.0.6",
     "@trendmicro/react-sidenav": "^0.4.5",
     "bootstrap": "^4.3.1",
     "draft-js": "^0.10.4",
@@ -11,6 +12,7 @@
     "draft-js-image-plugin": "^2.0.7",
     "draft-js-import-html": "^1.4.1",
     "draft-js-plugins-editor": "^3.0.0",
+    "emailjs-com": "^2.4.1",
     "emotion": "^10.0.23",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
