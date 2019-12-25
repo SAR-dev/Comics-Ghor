@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 exports.getSeries = (req, res) => {
     const series = Series.find()
-        .populate("createdBy", "_id name avatar Sinstagram Sfacebook Stwitter Syoutube")
+        .populate("createdBy", "_id name avatar")
         .select('_id name image summary createdBy')
         .then((series) => {
             res.json({ series })
