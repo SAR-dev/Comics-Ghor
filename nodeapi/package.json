@@ -18,7 +18,7 @@
     "email-existence": "^0.1.6",
     "email-exists": "^0.2.1",
     "express": "^4.17.1",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^6.0.0",
     "express-validator": "^5.3.1",
     "formidable": "^1.2.1",
     "jsonwebtoken": "^8.5.1",
