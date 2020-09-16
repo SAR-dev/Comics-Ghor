@@ -3,22 +3,34 @@ import { Redirect } from 'react-router-dom';
 import { isAuthenticated } from '../auth/auth';
 import { remove } from './apiUser';
 import { signout } from '../auth/auth';
+import Modal from 'react-modal';
 
 class DeleteUser extends Component {
     constructor() {
         super()
         this.state = {
-            load: false,
+            showModal: false,
             redirect: false
         }
+        this.handleOpenModal = this.handleOpenModal.bind(this);
+		this.handleCloseModal = this.handleCloseModal.bind(this);
     };
+
+    handleOpenModal() {
+		this.setState({ showModal: true });
+	}
+
+	handleCloseModal() {
+        this.deleteAccount()
+		this.setState({ showModal: false});
+	}
 
     resetError = () => {
         this.setState({load: false})
     };
 
     deleteCheck = () => {
-        this.setState({load: true})
+        this.setState({showModal: true})
     };
 
     deleteAccount = () => {
@@ -44,7 +56,30 @@ class DeleteUser extends Component {
 
         return (
             <>
-            <button className="btn del mx-1" onClick={this.deleteCheck}> 
+            <button className="px-4 py-2 text-sm shadow bg-gray-600 text-white rounded" onClick={this.deleteCheck}>
+                Delete User
+            </button>
+            <Modal
+					isOpen={this.state.showModal}
+                    contentLabel="Minimal Modal Example"
+                    className="border-0 bg-transparent max-w-lg mx-auto mt-10"
+                >
+                    <div className="bg-gray-900 rounded py-5 px-10 border-gray-600 mt-10 mx-5 md:mx-0" style={{marginTop: 150}}>
+                        <div className="my-5">
+                            <h1 className="text-2xl text-white font-semibold pb-5">WARNING !</h1>
+							<p className="text-sm text-white">Are you sure? If you click "YES" this profile will be deleted. To cancel this operation click the "X" button above.</p>
+                        </div>
+                        <div className="mt-10 mb-5">
+                            <button
+                                className="px-3 py-2 rounded bg-white font-semibold"
+                                onClick={this.handleCloseModal}
+                            >
+                                YES
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+            {/* <button className="btn del mx-1" onClick={this.deleteCheck}> 
                 <i className="material-icons">delete</i> 
             </button>
 
@@ -66,7 +101,7 @@ class DeleteUser extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
             </>
         )
     }

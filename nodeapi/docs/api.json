@@ -1,16 +1,3 @@
 {
-    "/": "Get all posts",
-    "/signup": "POST Signup",
-    "/signin": "POST Signin",
-    "/signout": "GET Signout",
-    "/posts": "GET Posts",
-    "/post/new/:userId": "POST a Post",
-    "/posts/by/:userId": "GET Posts by user id",
-    "/post/:postId": "PUT, DELETE a Post",
-    "/series": "GET Series",
-    "/series/new/:userId": "POST a Series",
-    "/series/by/:userId": "GET Series by user id",
-    "/series/:seriestId": "PUT, DELETE a Series",
-    "/users": "GET Users",
-    "/user/:userId": "GET, PUT, DELETE a User"
+    "message": "Welcome To Comics Ghor"
 }

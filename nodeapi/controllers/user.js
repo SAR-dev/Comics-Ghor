@@ -17,27 +17,83 @@ exports.userById = (req, res, next, id) => {
         })
 };
 
+exports.userNotification = (req, res) => {
+    User.findById(req.profile._id)
+        .populate('likeNot.user', 'name')
+        .populate('likeNot.post', '_id title')
+        .populate('commentNot.user', 'name')
+        .populate('commentNot.post', '_id title')
+        .select("likeNot commentNot")
+        .exec((err, user) => {
+            if (err || !user) {
+                return res.status(400).json({
+                    error: "User not found"
+                });
+
+            }
+            res.json(
+                user
+            );
+        })
+};
+
 exports.hasAuthorization = (req, res, next) => {
-    const authorized = req.profile && req.auth && req.profile._id === req.auth._id;
+    const sameUser = req.profile && req.auth && req.profile._id == req.auth._id;
+    const admin = req.profile && req.auth && req.auth.role === "admin";
+    const authorized = sameUser || admin
+    
     if (!authorized) {
         return res.status(403).json({
             error: "User is not authorized to perform this action!"
         });
     }
+    next()
 };
 
-exports.allUsers = (req, res) => {
-    User.find((err, users) => {
-        if (err) {
-            return res.status(400).json({
-                error: err
-            });
+exports.clearCommNot = (req, res) => {
+    let data = {}
+    data.user = req.body.userId
+    data.post = req.body.postId
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$pull: {commentNot: data}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            res.json(result)
         }
-        res.json(
-            users
-        );
-    }).select("name updated created avatar Sinstagram Sfacebook Stwitter Syoutube");
+    )
 };
+
+exports.clearLikeNot = (req, res, next) => {
+    let data = {}
+    data.user = req.body.userId
+    data.post = req.body.postId
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$pull: {likeNot: data}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            res.json(result)
+        }
+    )
+};
+
+// exports.allUsers = (req, res) => {
+//     User.find((err, users) => {
+//         if (err) {
+//             return res.status(400).json({
+//                 error: err
+//             });
+//         }
+//         res.json(
+//             users
+//         );
+//     }).select("name role updated created avatar Sinstagram Sfacebook Stwitter Syoutube");
+// };
 
 exports.getUser = (req, res) => {
     req.profile.hashed_password = undefined;
@@ -82,7 +138,7 @@ exports.deleteUser = (req, res, next) => {
 exports.addFollowing = (req, res, next) => {
     User.findByIdAndUpdate(
         req.body.userId, 
-        {$push: {following: req.body.followId}}, 
+        {$push: {following: req.body.followId, points: 5}},
         (err, result) => {
             if(err) {
                 return res.status(400).json({error: err});
@@ -95,8 +151,8 @@ exports.addFollowing = (req, res, next) => {
 exports.addFollower = (req, res) => {
     User.findByIdAndUpdate(
         req.body.followId, 
-        {$push: {followers: req.body.userId}}, 
-        {new: true}
+        {$push: {followers: req.body.userId, points: 5}}, 
+        {new: true},
     )
     .populate('following', '_id name avatar')
     .populate('followers', '_id name avatar')
@@ -115,7 +171,7 @@ exports.addFollower = (req, res) => {
 exports.removeFollowing = (req, res, next) => {
     User.findByIdAndUpdate(
         req.body.userId, 
-        {$pull: {following: req.body.unfollowId}}, 
+        {$pull: {following: req.body.unfollowId, points: 5}}, 
         (err, result) => {
             if(err) {
                 return res.status(400).json({error: err});
@@ -128,7 +184,7 @@ exports.removeFollowing = (req, res, next) => {
 exports.removeFollower = (req, res) => {
     User.findByIdAndUpdate(
         req.body.unfollowId, 
-        {$pull: {followers: req.body.userId}}, 
+        {$pull: {followers: req.body.userId, points: 5}}, 
         {new: true}
     )
     .populate('following', '_id name avatar')
@@ -157,3 +213,41 @@ exports.findPeople = (req, res) => {
         res.json(users)
     }).select("_id name avatar")
 }
+
+exports.userSearch = (req, res) => {
+    const { search } = req.query;
+    if (search) {
+        User.find(
+            {
+                $or: [{ name: { $regex: search, $options: 'i' } }, { fullname: { $regex: search, $options: 'i' } }, { email: { $regex: search, $options: 'i' } }]
+            },
+            (err, users) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    });
+                }
+                res.json(users);
+            }
+        ).select('-hashed_password -salt -cover -about -following -followers -resetPasswordLink -role -points');
+    }
+};
+
+exports.bloodSearch = (req, res) => {
+    const { search } = req.query;
+    if (search) {
+        User.find(
+            {
+                $or: [{ blood: { $regex: search, $options: 'i' } }]
+            },
+            (err, users) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    });
+                }
+                res.json(users);
+            }
+        ).select('-hashed_password -salt -cover -about -following -followers -resetPasswordLink -role -points -likeNot -commentNot');
+    }
+};

@@ -1,9 +1,0 @@
-photo edit
-characters counter
-discussion
-Social Login 
-Admin Panel
-only image up
-pagination
-comment counter in home
-notification

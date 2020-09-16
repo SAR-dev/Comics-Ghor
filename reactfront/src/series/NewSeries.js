@@ -2,222 +2,313 @@ import React, { Component } from 'react';
 import { isAuthenticated } from '../auth/auth';
 import { imageupload, create } from './apiSeries';
 import { Redirect } from 'react-router-dom';
-import Uploading from '../images/uploading.gif';
-import '../post/Editor.css';
+import PrimaryLayout from '../core/PrimaryLayout';
+import Modal from 'react-modal';
+import LoadingModal from '../core/LoadingModal';
+import TextareaAutosize from 'react-textarea-autosize';
+import Img from 'react-image';
+import LoaderSvg from '../images/rings.svg';
 
 class NewSeries extends Component {
-    constructor() {
-        super()
-        this.handleImage = this.handleImage.bind(this);
-        this.state = {
-            name: "",
-            nameError: true,
-            summary: "",
-            summaryError: true,
-            image: "",
-            imageError: true,
-            error: "",
-            uploading: false,
-            loading: false,
-            user: {},
-            redirectToHome: false,
-        }
-    };
+	constructor() {
+		super();
+		this.handleImage = this.handleImage.bind(this);
+		this.state = {
+			name: '',
+			nameError: true,
+			summary: '',
+			summaryError: true,
+			image: '',
+			imageError: false,
+			error: '',
+			uploading: false,
+			loading: false,
+			user: {},
+			redirectToHome: false,
+			showModal: false
+		};
+		this.handleOpenModal = this.handleOpenModal.bind(this);
+		this.handleCloseModal = this.handleCloseModal.bind(this);
+	}
 
-    componentDidMount() {
-        this.postData = new FormData();
-        this.setState({user: isAuthenticated().user})
-    };
+	handleOpenModal() {
+		this.setState({ showModal: true });
+	}
 
-    handleName = () => (event) => {
-        if (event.target.value.length < 1 || event.target.value.length > 100) {
-            this.setState({ nameError: true, name: event.target.value})
-            this.postData.set('name', event.target.value)
-        } else {
-            this.setState({ nameError: false, name: event.target.value })
-            this.postData.set('name', event.target.value)
-        }
-    };
+	handleCloseModal() {
+		this.setState({ showModal: false, imageError: false });
+	}
 
-    handleSummary = () => (event) => {
-        if (event.target.value.length < 1) {
-            this.setState({ summaryError: true, summary: event.target.value})
-            this.postData.set('summary', event.target.value)
-        } else {
-            this.setState({ summaryError: false, summary: event.target.value })
-            this.postData.set('summary', event.target.value)
-        }
-    }
+	componentDidMount() {
+		this.postData = new FormData();
+		this.setState({ user: isAuthenticated().user });
+	}
 
-    handleImage(event) {
-        this.setState({ uploading: true })
-        var fileInput = false
-        if (!event.target.files[0] || event.target.files[0].size > 19922944) {
-            this.setState({ imageError: true, uploading: false })
-        }
-        if (event.target.files[0]) {
-            fileInput = true
-        }
-        if (fileInput) {
-            var img = event.target.files[0]
-            imageupload(img).then(res => {
-                this.setState({ image: res.data.id, imageError: false, uploading: false })
-                this.postData.set('image', res.data.id)
-            }
-            )
-        }
-    };
+	handleName = () => (event) => {
+		if (event.target.value.length < 1 || event.target.value.length > 100) {
+			this.setState({ nameError: true, name: event.target.value });
+			this.postData.set('name', event.target.value);
+		} else {
+			this.setState({ nameError: false, name: event.target.value });
+			this.postData.set('name', event.target.value);
+		}
+	};
 
-    deleteImage = (e, i) => {
-        e.preventDefault();
-        this.setState({image: ""})
-        this.postData.set('image', "")
-    };
+	handleSummary = () => (event) => {
+		if (event.target.value.length < 1) {
+			this.setState({ summaryError: true, summary: event.target.value });
+			this.postData.set('summary', event.target.value);
+		} else {
+			this.setState({ summaryError: false, summary: event.target.value });
+			this.postData.set('summary', event.target.value);
+		}
+	};
 
-    redirectToHome = () => {
-        this.setState({ redirectToHome: true })
-    };
+	handleImage(event) {
+		this.setState({ uploading: true });
+		var fileInput = false;
+		if (!event.target.files[0] || event.target.files[0].size > 19922944) {
+			this.setState({ imageError: true, uploading: false });
+		}
+		if (event.target.files[0]) {
+			fileInput = true;
+		}
+		if (fileInput) {
+			var img = event.target.files[0];
+			imageupload(img).then((res) => {
+				this.setState({ image: res.data.id, imageError: false, uploading: false });
+				this.postData.set('image', res.data.id);
+			});
+		}
+	}
 
-    resetError = () => {
-        this.setState({ error: "", loading: false })
-    };
+	deleteImage = (e, i) => {
+		e.preventDefault();
+		this.setState({ image: '' });
+		this.postData.set('image', '');
+	};
 
+	redirectToHome = () => {
+		this.setState({ redirectToHome: true });
+	};
 
-    clickSubmit = (event) => {
-        event.preventDefault()
-        this.setState({ loading: true })
+	resetError = () => {
+		this.setState({ error: '', loading: false });
+	};
 
-        const userId = isAuthenticated().user._id
-        const token = isAuthenticated().token
+	clickSubmit = (event) => {
+		event.preventDefault();
+		this.setState({ loading: true });
 
-        create(userId, token, this.postData)
-            .then(data => {
-                if (data.error) {
-                    this.setState({ loading: true, error: data.error })
-                } else {
-                    this.setState({
-                        name: "",
-                        nameError: true,
-                        summary: "",
-                        summaryError: true,
-                        image: "",
-                        imageError: false,
-                        error: "",
-                        uploading: false,
-                        loading: false,
-                        user: {},
-                        redirectToHome: true,
-                    })
-                }
-            })
-    };
+		const userId = isAuthenticated().user._id;
+		const token = isAuthenticated().token;
+		this.postData.set('shortSummary', this.state.summary.slice(0,200))
 
-    createPost = (name, summary, image, nameError, summaryError, imageError, error, uploading, loading, user, redirectToHome) => (
-        <form>
-            <div className="form-group row pb-2">
-            <small className="text-info fs-small fw-700 mb-1">Give an awesome Name to your series!</small>
-                <input id="name" value={name} onChange={this.handleName("name")} className={nameError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} placeholder="Write a name" type="text" style={{boxShadow: "none"}} />
-                <div className="valid-feedback">Looks good!</div>
-                <div className="invalid-feedback">Name is required and should not exceed 100 characters</div>
-            </div>
+		create(userId, token, this.postData).then((data) => {
+			if (data.error) {
+				this.setState({ loading: true, error: data.error });
+			} else {
+				this.setState({
+					name: '',
+					nameError: true,
+					summary: '',
+					summaryError: true,
+					image: '',
+					imageError: false,
+					error: '',
+					uploading: false,
+					loading: false,
+					user: {},
+					redirectToHome: true
+				});
+			}
+		});
+	};
 
-            <div className="form-group row pb-2">
-                <small className="text-info fs-small fw-700 mb-1">Write a summary</small>
-                <textarea rows="5" id="summary" value={summary} onChange={this.handleSummary("summary")} className={summaryError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} placeholder="Start writing..." type="text" style={{boxShadow: "none"}} />
-                <div className="valid-feedback">Looks good!</div>
-                <div className="invalid-feedback">Do you really want to leave it empty?</div>
-            </div>
-            <div className="row">
-                <small className="text-info fs-small fw-700 mb-1">Upload a cover photo for your series</small>
-            </div>
-            <div className="row mb-1">
-                {image.length > 1 && (
-                        <div className="col-2 px-0 mr-2">
-                            <img src={`https://i.imgur.com/${image}s.jpg`} style={{height: "126px", width: "126px", objectFit: "cover", borderRadius: "5px"}}/>
-                            <button className="btn btn-sm image-del" onClick={(e)=>this.deleteImage(e)}><i className="fas fa-trash text-danger"></i></button>
-                        </div>
-                    )
-                }
-                
-                <div className="col-2 px-0 box">
-                    <label htmlFor="image-input" className="mb-0">
-                        <i className="fas fa-camera camera"></i>
-                    </label>
-                <input type="file" accept="image/*" onChange={this.handleImage} id="image-input" className={imageError ? "form-control form-control-sm is-invalid" : "form-control form-control-sm is-valid"} />      
-                </div>
-            </div>
-            <div className={imageError ? "d-none" : "row body-error-none mb-3"}>Looks good!</div>
-            <div className={imageError ? "row body-error mb-3" : "d-none"}>Please upload a valid image with size less than 20MB</div>
+	createPost = (
+		name,
+		summary,
+		image,
+		nameError,
+		summaryError,
+		imageError,
+		uploading,
+		loading,
+	) => (
+		<form className="p-4">
+			<h1 className="text-2xl tracking-wide font-semibold text-white my-3">CREATE SERIES</h1>
+			<div className="relative w-full mb-3">
+				<label className="block uppercase tracking-wide text-cream text-xs font-bold mb-2">Series Name:</label>
+				<input
+					value={name}
+					onChange={this.handleName('name')}
+					spellCheck="false"
+					type="text"
+					className="px-3 py-3 placeholder-gray-500 text-gray-700 bg-gray-200 rounded text-sm focus:outline-none focus:shadow-outline w-full"
+					placeholder="Series Name"
+					style={{ transition: 'all 0.15s ease 0s' }}
+				/>
+				<span className={nameError ? 'text-gray-600 text-sm' : 'text-transparent text-sm'}>
+					Name is required and should not exceed 100 characters
+				</span>
+			</div>
+			<div className="relative w-full mb-3">
+				<label className="block uppercase tracking-wide text-cream text-xs font-bold mb-2">Series Summary:</label>
+				<TextareaAutosize
+					placeholder="Write a summary for your series..."
+					value={summary}
+					type="text"
+					className="h-32 resize-y px-3 py-3 placeholder-gray-500 text-gray-700 bg-gray-200 rounded text-sm focus:outline-none focus:shadow-outline w-full"
+					onChange={this.handleSummary('summary')}
+					minRows="5"
+					style={{ transition: 'all 0.15s ease 0s' }}
+				/>
+				<span className={summaryError ? 'text-gray-600 text-sm' : 'text-transparent text-sm'}>
+					Do you really want to leave it empty?
+				</span>
+			</div>
 
-            <div className="form-group row">
-                <button
-                    onClick={this.clickSubmit}
-                    className={loading ? "d-none" : "btn btn-sm btn-primary"}
-                    disabled={nameError || summaryError ? true : false}
-                > Create Series
-                </button>
-                <button
-                    className={loading ? "btn btn-sm btn-primary" : "d-none"}
-                    disabled
-                >
-                    <span className="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-                    Checking...
-                </button>
-                <button
-                    className="btn btn-sm btn-warning text-white ml-3"
-                    onClick={this.redirectToHome}>
-                    Cancel
-                </button>
-            </div>
+			<div className="flex relative w-full mb-3">
+				{image.length > 1 && (
+					<div className="flex-1">
+						<div className="relative hover:opacity-50 cursor-pointer mx-2 text-center">
+							<Img
+								className="w-full h-48 rounded object-contain"
+								src={`https://i.imgur.com/${image}l.jpg`}
+								onClick={(e) => this.deleteImage(e)}
+								alt="upload"
+								loader={<img src={LoaderSvg} className="h-48 mx-auto" />}
+							/>
+							<span className="text-xs text-gray-600">Click to remove</span>
+						</div>
+					</div>
+				)}
+				{image.length < 1 && (
+					<div className="flex-1 border border-dashed border-gray-500 relative">
+						<input
+							type="file"
+							accept="image/*"
+							className={
+								uploading || imageError ? (
+									'pointer-events-none relative block opacity-0 w-full h-full p-20 z-50'
+								) : (
+									'cursor-pointer relative block opacity-0 w-full h-full p-20 z-50'
+								)
+							}
+							onChange={this.handleImage}
+							id="image-input"
+						/>
+						<div className="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+							<i className="fas fa-camera text-5xl text-gray-500" />
+							<h4 className="text-gray-600 text-xl">Click and Upload Cover</h4>
+						</div>
+					</div>
+				)}
+			</div>
+			<div className="relative w-full mb-3">
+				<button
+					onClick={this.clickSubmit}
+					className="w-full rounded bg-gray-800 py-2 text-white uppercase tracking-wide font-semibold"
+				>
+					Submit
+				</button>
+			</div>
+		</form>
+	);
 
-        </form>
-    )
-
-    render() {
-        const { name, summary, image, nameError, summaryError, imageError, error, uploading, loading, user, redirectToHome } = this.state
-        if (redirectToHome) {
-            return <Redirect to={"/"} />
-        }
-        return (
-            <>
-                <div className="container new-post">
-                    <div className="row">
-                        <div className="col-lg-8 col-md-10 col-11 mx-auto my-5">
-                            {this.createPost (name, summary, image, nameError, summaryError, imageError, error, uploading, loading, user, redirectToHome)}
-                        </div>
-                    </div>
-                </div>
-
-                <div className={error ? "modal fade show d-block blurred" : "modal fade"} tabIndex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-name text-danger"> <i className="material-icons text-danger float-left" style={{ marginTop: "3px", marginRight: "3px" }}>error</i><span>ERROR!</span></h5>
-                                <button onClick={this.resetError} type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                    <i className="material-icons">cancel</i>
-                                </button>
-                            </div>
-                            <div className="modal-summary">
-                                {`${error}`}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={uploading ? "loading-state modal fade show d-block blurred" : "modal fade"} tabIndex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-summary" style={{background: "white", border: "none", textAlign: "center"}}>
-                                <img src={Uploading} style={{height: "150px"}}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </>
-        )
-    }
+	render() {
+		const {
+			name,
+			summary,
+			image,
+			nameError,
+			summaryError,
+			imageError,
+			error,
+			uploading,
+			loading,
+			user,
+			redirectToHome
+		} = this.state;
+		if (redirectToHome) {
+			return <Redirect to={'/series'} />;
+		}
+		return (
+			<PrimaryLayout>
+				<div
+					className={
+						imageError || uploading ? (
+							'pointer-events-none max-w-screen-md mx-auto'
+						) : (
+							'max-w-screen-md mx-auto'
+						)
+					}
+				>
+					{this.createPost(
+						name,
+						summary,
+						image,
+						nameError,
+						summaryError,
+						imageError,
+						error,
+						uploading,
+						loading,
+						user,
+						redirectToHome
+					)}
+					<Modal
+						isOpen={imageError}
+						contentLabel="Minimal Modal Example"
+						className="border-0 bg-transparent max-w-lg mx-auto mt-10"
+					>
+						<div
+							className="bg-gray-900 rounded py-5 px-10 border-gray-600 mt-10 mx-5 md:mx-0"
+							style={{ marginTop: 150 }}
+						>
+							<div className="my-5">
+								<h1 className="text-2xl text-white font-semibold pb-5">Image Upload Error !</h1>
+								<p className="text-sm text-white">Size of the selected image is too big</p>
+							</div>
+							<div className="mt-10 mb-5">
+								<button
+									className="px-3 py-2 rounded bg-white font-semibold"
+									onClick={this.handleCloseModal}
+								>
+									GOT IT
+								</button>
+							</div>
+						</div>
+					</Modal>
+					<Modal
+						isOpen={error.length > 0}
+						contentLabel="Minimal Modal Example"
+						className="border-0 bg-transparent max-w-lg mx-auto mt-10"
+					>
+						<div
+							className="bg-gray-900 rounded py-5 px-10 border-gray-600 mt-10 mx-5 md:mx-0"
+							style={{ marginTop: 150 }}
+						>
+							<div className="my-5">
+								<h1 className="text-2xl text-white font-semibold pb-5">Sumbmission Error !</h1>
+								<p className="text-sm text-white">{`${error}`}</p>
+							</div>
+							<div className="mt-10 mb-5">
+								<button
+									className="px-3 py-2 rounded bg-white font-semibold"
+									onClick={this.handleCloseModal}
+								>
+									GOT IT
+								</button>
+							</div>
+						</div>
+					</Modal>
+					<LoadingModal trigger={uploading} text="UPLOADING" />
+					<LoadingModal trigger={loading} text="SUBMITTING..." />
+				</div>
+			</PrimaryLayout>
+		);
+	}
 }
 
 export default NewSeries;

@@ -1,13 +1,15 @@
 const express = require('express');
 const app = express();
-const morgan = require('morgan');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const expressValidator = require('express-validator');
-const fs = require('fs');
-const cors = require('cors');
+
+// Import other packages
+const morgan = require('morgan'); // HTTP request logger middleware for node.js
+const dotenv = require('dotenv'); // loads environment variables from a .env file into process.env
+const mongoose = require('mongoose'); // MongoDB object modeling tool designed to work in an asynchronous environment
+const bodyParser = require('body-parser'); // populate the req.body property with the parsed body 
+const cookieParser = require('cookie-parser'); // Parse Cookie header and populate req.cookies with an object keyed by the cookie names
+const expressValidator = require('express-validator'); // Validator middleware
+const fs = require('fs'); // enables interacting with the file system
+const cors = require('cors'); // enable CORS
 
 dotenv.config();
 
@@ -20,11 +22,12 @@ mongoose.connection.on('error', err => {
     console.log(`DB error: ${err.message}`)
 });
 
-// Routes
+// Import Routes
 const postRoutes = require('./routes/post');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const seriesRoutes = require('./routes/series');
+const catRoutes = require('./routes/cat');
 
 // API docs
 app.get("/", (req, res) => {
@@ -49,6 +52,7 @@ app.use("/", postRoutes);
 app.use("/", authRoutes);
 app.use("/", userRoutes);
 app.use("/", seriesRoutes);
+app.use("/", catRoutes);
 
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {

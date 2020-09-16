@@ -21,9 +21,22 @@ const postSchema = new mongoose.Schema({
         type: ObjectId,
         ref: "Series"
     },
+    catOf: {
+        type: ObjectId,
+        ref: "Cat"
+    },
+    typeOf: {
+        type: String
+    },
     created: {
         type: Date,
         default: Date.now
+    },
+    thumbnail: {
+        type: String
+    },
+    summary: {
+        type: String
     },
     likes: [{type: ObjectId, ref: "User"}],
     comments: [
@@ -33,7 +46,11 @@ const postSchema = new mongoose.Schema({
             created: {type: Date, default: Date.now},
             postedBy: {type: ObjectId, ref: "User"}
         }
-    ]
+    ],
+    commentsCount: {
+        type: Array,
+        default: []
+    },
 });
 
 module.exports = mongoose.model('Post', postSchema);

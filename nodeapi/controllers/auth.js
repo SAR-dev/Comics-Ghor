@@ -5,12 +5,45 @@ const User = require('../models/user');
 const _ = require("lodash");
 const { sendEmail } = require("../helpers");
 
+exports.preSignup = (req, res) => {
+    const { name, email, password } = req.body;
+    User.findOne({ email: email.toLowerCase() }, (err, user) => {
+        if (user) {
+            return res.status(400).json({
+                error: 'Email is taken'
+            });
+        }
+        const token = jwt.sign({ name, email, password }, process.env.JWT_ACCOUNT_ACTIVATION, { expiresIn: '1h' });
+
+        const emailData = {
+            from: 'comicsghor@gmail.com',
+            to: email,
+            subject: `Account activation link`,
+            html: `
+            <p>Please use the following link to activate your acccount:</p>
+            <p>${process.env.CLIENT_URL}/account/activate/${token}</p>
+            <hr />
+            <p>This email may contain sensetive information</p>
+        `
+        };
+
+        sendEmail(emailData);
+            return res.status(200).json({
+                message: `Email has been sent to ${email}. Follow the instructions to activate your account.`
+            });
+    });
+};
+
 exports.signup = async (req, res) => {
+    // check existing user
     const userExists = await User.findOne({ email: req.body.email });
+    // if exists throw error
     if (userExists) return res.status(403).json({
         error: "Email is taken!"
     });
+    // if doesn't exist create user
     const user = await new User(req.body);
+    // save user
     await user.save();
     res.status(200).json({
         message: "Signup success! Please login."
@@ -34,12 +67,12 @@ exports.signin = (req, res) => {
             });
         }
         //generate token
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ _id: user._id, role: user.role, avatar: user.avatar }, process.env.JWT_SECRET);
         //persist token as 'cgt'
         res.cookie("cgt", token, { expire: new Date() + 999999 });
         //respond
-        const { _id, name, email } = user;
-        return res.json({ token, user: { _id, email, name } });
+        const { _id, name, email, role, avatar } = user;
+        return res.json({ token, user: { _id, email, name, role, avatar } });
     })
 };
 
@@ -75,7 +108,7 @@ exports.forgotPassword = (req, res) => {
 
         // email data
         const emailData = {
-            from: 'noreply@node-react.com',
+            from: 'comicsghor@gmail.com',
             to: email,
             subject: 'Password Reset Instructions',
             text: `Please use the following link to reset your password: ${

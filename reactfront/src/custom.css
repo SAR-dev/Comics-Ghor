@@ -1,0 +1,241 @@
+@media (min-width: 1024px) {
+	.lg-300 {
+		height: 300px !important;
+	}
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Viga&display=swap');
+.welcome-font {
+	font-family: 'Viga', sans-serif;
+}
+
+div[data-rmiz-wrap="visible"] {
+	display: flex !important;
+}
+.spin {
+	-webkit-animation: spin 4s linear infinite;
+	-moz-animation: spin 4s linear infinite;
+	animation: spin 4s linear infinite;
+}
+
+@-moz-keyframes spin {
+	100% {
+		-moz-transform: rotate(360deg);
+	}
+}
+@-webkit-keyframes spin {
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+@keyframes spin {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+div:focus, div, a:focus, a, button:focus, button {
+    outline:none !important;
+}
+
+.max-h-500 {
+	max-height: 500px;
+}
+.ReactModal__Overlay {
+	z-index: 9999;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Monoton&display=swap');
+.not-found {
+	font-family: 'Monoton', cursive;
+}
+
+.rdw-option-active {
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+	background: rgb(201, 201, 201);
+}
+
+.border-github {
+	border: 1px solid #333;
+}
+.bg-black {
+	background-color: #1b262c;
+}
+.text-cream {
+	color: #ededed;
+}
+/* BRAFT EDITOR CSS */
+
+.bf-content,
+.RichEditor-editor,
+.ck-content {
+	color: #fff;
+}
+
+.ck-content {
+	background-color: #1A202C !important;
+}
+
+.bf-controlbar button {
+	color: white !important;
+}
+
+.ck-content iframe{
+	height: 250px !important;
+	max-width: 400px !important;
+}
+
+.ck-content .ck-media__wrapper{
+	height: 250px !important;
+	max-width: 400px !important;
+	margin-top: 10px;
+	margin-bottom: 10px;	
+}
+
+.ck .ck-file-dialog-button {
+	display: none !important;
+}
+
+.bf-content .bf-link-wrap a, .ck-content a {
+	color: #3182ce;
+}
+
+.bf-content .bf-link-wrap a:hover, .ck-content a:hover {
+	color: #2b6cb0;
+}
+
+.bf-content h1, .RichEditor-editor h1 , .ck-content h1{
+	font-size: 40px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bf-content h2, .RichEditor-editor h2 , .ck-content h2{
+	font-size: 36px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bf-content h3, .RichEditor-editor h3 .ck-content h3{
+	font-size: 32px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bf-content h4, .RichEditor-editor h4, .ck-content h4 {
+	font-size: 30px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bf-content h5, .RichEditor-editor h5, .ck-content h5 {
+	font-size: 28px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bf-content h6, .RichEditor-editor h6, .ck-content h6 {
+	font-size: 24px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.bf-content p, .RichEditor-editor p, .ck-content p {
+	font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 10px 0;
+    min-height: 1em;
+}
+ 
+.bf-container .public-DraftEditor-content blockquote, .RichEditor-editor blockquote, .ck-content blockquote {
+	margin: 0 0 10px;
+	padding: 15px 20px;
+	background-color: #4A5568;
+	border-left: 5px solid #718096;
+	color: #fff;
+	font-style: italic;
+}
+
+/* BURGER MENU */
+/* Position and sizing of burger button */
+.bm-burger-button {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	margin-top: 17px;
+  }
+
+  .notification-icon {
+	  font-size: 20px !important;
+  }
+
+  #notification-scroll .ScrollbarsCustom-Track {
+	  margin-right: 3px;
+  }
+  
+  /* Color/shape of burger icon bars */
+  .bm-burger-bars {
+	background: rgba(113,128,150,.5);
+  }
+  
+  /* Color/shape of burger icon bars on hover*/
+  .bm-burger-bars-hover {
+	background: rgba(113,128,150,1);
+  }
+  
+  /* Position and sizing of clickable cross button */
+  .bm-cross-button {
+	height: 24px;
+	width: 24px;
+	border-radius: 50%;
+	background-color: #1A202C;
+	top: 10px !important;
+	right: 18px !important;
+  }
+  
+  /* Color/shape of close button cross */
+  .bm-cross {
+	background: #A0AEC0;
+  }
+  
+  /*
+  Sidebar wrapper styles
+  Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
+  */
+  .bm-menu-wrap {
+	position: fixed;
+	height: 100%;
+  }
+  
+  /* General sidebar styles */
+  .bm-menu {
+	background: #2d3748;
+	font-size: 1.15em;
+  }
+  
+  /* Morph shape necessary with bubble or elastic */
+  .bm-morph-shape {
+	fill: #373a47;
+  }
+  
+  /* Wrapper for item list */
+  .bm-item-list {
+	color: #b8b7ad;
+  }
+  
+  /* Individual item */
+  .bm-item {
+	display: inline-block;
+  }
+  
+  /* Styling of overlay */
+  .bm-overlay {
+	/* position: relative !important; */
+	background: rgba(0, 0, 0, 0.3);
+  }
+  
+  
+  
+  

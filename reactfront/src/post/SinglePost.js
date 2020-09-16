@@ -1,230 +1,332 @@
 import React, { Component } from 'react';
 import { singlePost, remove, like, unlike } from './apiPost';
-import LazyLoad from 'react-lazyload';
-import { Link, Redirect } from "react-router-dom";
-import Loading from '../images/loading.jpg';
+import { Link, Redirect } from 'react-router-dom';
 import { isAuthenticated } from '../auth/auth';
 import Comment from './Comment';
-import './SinglePost.css';
+import AdLayout from '../core/AdLayout';
+import Img from 'react-image';
+import '../post-markdown.css';
+import Moment from 'react-moment';
+import Clap from '../images/clap/clap.svg';
+import Clapping from '../images/clap/clapping.gif';
+import Modal from 'react-modal';
+import LoadingModal from '../core/LoadingModal';
+import LoaderSvg from '../images/rings.svg';
+import SeoHelmet from '../core/SeoHelmet';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 class SinglePost extends Component {
-    constructor() {
-        super()
-        this.state = {
-            _id: "",
-            title: "",
-            body: "",
-            created: "",
-            image: [],
-            postedBy: {},
-            seriesName: "",
-            loading: true,
-            redirectToHome: false,
-            redirectToSignin: false,
-            check: false,
-            likes: "",
-            like: false,
-            comments: []
-        }
-    };
+	constructor() {
+		super();
+		this.state = {
+			_id: '',
+			title: '',
+			body: '',
+			created: '',
+			image: [],
+			postedBy: {},
+			seriesName: '',
+			seriesId: '',
+			redirectToHome: false,
+			redirectToSignin: false,
+			check: false,
+			likes: '',
+			like: false,
+			comments: [],
+			initializing: true,
+			summary: '',
+			thumbnail: '',
+			liking: false,
+			typeOf: ''
+		};
+	}
 
-    checkLike = (likes) => {
-        const userId = isAuthenticated() && isAuthenticated().user._id
-        let match = likes.indexOf(userId) !== -1
-        return match
-    };
+	checkLike = (likes) => {
+		const userId = isAuthenticated() && isAuthenticated().user._id;
+		let match = likes.indexOf(userId) !== -1;
+		return match;
+	};
 
-    likeToogle = () => {
-        if (!isAuthenticated()) {
-            this.setState({ redirectToSignin: true })
-            return false;
-        }
-        let callApi = this.state.like ? unlike : like
-        const userId = isAuthenticated().user._id
-        const postId = this.state._id
-        const token = isAuthenticated().token
-        callApi(userId, token, postId)
-            .then(data => {
-                if (data.error) {
-                    console.log(data.error)
-                } else {
-                    this.setState({
-                        like: !this.state.like,
-                        likes: data.likes
-                    })
-                }
-            })
-    };
+	likeToogle = () => {
+		this.setState({liking: true})
+		if (!isAuthenticated()) {
+			this.setState({ redirectToSignin: true });
+			return false;
+		}
+		let callApi = this.state.like ? unlike : like;
+		const userId = isAuthenticated().user._id;
+		const postId = this.state._id;
+		const ownerId = this.state.postedBy._id;
+		const token = isAuthenticated().token;
+		callApi(userId, token, postId, ownerId).then((data) => {
+			if (data.error) {
+				console.log(data.error);
+			} else {
+				this.setState({
+					like: !this.state.like,
+					likes: data.likes,
+					liking: false
+				});
+			}
+		});
+	};
 
-    componentDidMount() {
-        window.scrollTo(0, 0)
-        const postId = this.props.match.params.postId
-        singlePost(postId)
-            .then(data => {
-                if (data.error) {
-                    console.log(data.error)
-                } else {
-                    const image = data.image[0] ? data.image[0].split(',') : undefined
-                    this.setState({
-                        _id: data._id,
-                        title: data.title,
-                        body: data.body,
-                        created: data.created,
-                        image: image,
-                        postedBy: data.postedBy,
-                        seriesName: data.seriesOf.name,
-                        loading: false,
-                        likes: data.likes,
-                        like: this.checkLike(data.likes),
-                        comments: data.comments
-                    })
-                }
-            })
-    }
+	componentDidMount() {
+		this.initialize()
+	}
 
-    checkDeletePost = () => {
-        this.setState({ check: true })
-    }
+	componentDidUpdate (prevProps) {
+		if (prevProps.location.key !== this.props.location.key) {
+			this.setState({initializing: true})
+			this.initialize()
+		}
+	}
 
-    cancelDeletePost = () => {
-        this.setState({ check: false })
-    }
+	initialize = () => {
+		window.scrollTo(0, 0);
+		const postId = this.props.match.params.postId;
+		singlePost(postId).then((data) => {
+			if (data.error) {
+				console.log(data.error);
+			} else {
+				const image = data.image[0] ? data.image[0].split(',') : undefined;
+				this.setState({
+					_id: data._id,
+					title: data.title,
+					body: data.body,
+					created: data.created,
+					image: image,
+					postedBy: data.postedBy,
+					seriesName: data.seriesOf.name,
+					seriesId: data.seriesOf._id,
+					likes: data.likes,
+					like: this.checkLike(data.likes),
+					comments: data.comments,
+					initializing: false,
+					summary: data.summary,
+					thumbnail: data.thumbnail,
+					typeOf: data.typeOf
+				});
+			}
+		});
+	}
 
-    deletePost = () => {
-        const postId = this.props.match.params.postId
-        const token = isAuthenticated().token
-        remove(postId, token)
-            .then(data => {
-                if (data.error) {
-                    console.log(data.error)
-                } else {
-                    this.setState({ redirectToHome: true })
-                }
-            })
-    }
+	checkDeletePost = () => {
+		this.setState({ check: true });
+	};
 
-    createMarkup = () => {
-        return { __html: this.state.body };
-    }
+	cancelDeletePost = () => {
+		this.setState({ check: false });
+	};
 
-    updateComments = (comments) => {
-        this.setState({comments})
-    }
+	deletePost = () => {
+		const postId = this.props.match.params.postId;
+		const token = isAuthenticated().token;
+		remove(postId, token).then((data) => {
+			if (data.error) {
+				console.log(data.error);
+			} else {
+				this.setState({ redirectToHome: true });
+			}
+		});
+	};
 
-    render() {
-        const { title, body, created, image, postedBy, seriesName, loading, check, _id, likes, like, comments } = this.state
-        if (this.state.redirectToHome) {
-            return <Redirect to={"/"} />
-        } else if (this.state.redirectToSignin) {
-            return <Redirect to={"/signin"} />
-        }
-        return (
-            <>
-                <div className="container" id="SINGLEPOST">
-                    <div className="row my-5">
-                        <div className="post-card col-lg-8 col-sm-12 single-post-div bg-light">
-                            <div className="card-body">
-                                <span className="card-series">{seriesName}</span>
-                                {isAuthenticated().user && isAuthenticated().user._id === postedBy._id && <>
-                                    <div className="float-right">
-                                        <Link style={{ fontSize: "10px" }} className="btn btn-sm text-muted mx-1" to={`/post/edit/${_id}`}>Update</Link>
-                                        <button onClick={this.checkDeletePost} style={{ fontSize: "10px" }} className="btn btn-sm text-muted mx-1">Delete</button>
-                                    </div>
-                                </>}
-                                <h4 className="card-title text-center py-3 my-3 border-top border-bottom" style={{ fontSize: "40px" }}>{title}</h4>
-                                <div className="card-text" dangerouslySetInnerHTML={this.createMarkup()} />
-                                
-                                <div className="text-center">
-                                {image && image.map((imgSrc, i) => (
-                                    <LazyLoad offset={100} key={i}>
-                                        <img className="my-2 rounded" src={`https://i.imgur.com/${imgSrc}l.png`} style={{ width: "100%" }} />
-                                    </LazyLoad>
-                                ))}
-                                </div>
-                                
-                                <div className="row like my-2 mx-0">
-                                    <div className="col-6 px-1">
-                                        <button onClick={this.likeToogle} className="btn btn-sm btn-block btn-light">
-                                            <i className={like ? "fas fa-heart" : "far fa-heart"}></i>
-                                        </button>
-                                    </div>
-                                    <div className="col-6 px-1">
-                                        <button className="btn btn-sm btn-block btn-light text-muted" style={{paddingTop: "9px", paddingBottom: "9px"}}>{likes.length} People Loved</button>
-                                    </div>
-                                </div>
+	createMarkup = () => {
+		return { __html: this.state.body };
+	};
 
-                                <div className="row mx-0 card-user">
-                                    <div className="card-avatar"><img src={`https://i.imgur.com/${postedBy.avatar}s.png`} /></div>
-                                    <Link className="card-user-link" to={`/user/${postedBy._id}`}>
-                                        <span className="card-username">{postedBy.name}</span>
-                                        <br />
-                                        <span className="card-date mt-0">Posted on {new Date(created).toDateString()}</span>
-                                    </Link>
-                                    <div className="member-since">
-                                        Member Since {new Date(postedBy.created).getFullYear()}
-                                    </div>
-                                </div>
-                                
-                            </div>
+	updateComments = (comments) => {
+		this.setState({ comments });
+	};
 
-                            <div className="row">
-                                <Comment postId= {_id} comments={comments.reverse()} updateComments={this.updateComments} />
-                            </div>
-                        </div>
-                        <div className="col-lg-4 d-sm-none d-lg-block promotions-list">
-                            <div className="row">
-                                <div className="col-12 pronotions">
-                                    <div className="rounded m-4" style={{background: "#d7e3da", height: "250px"}}>
-                                        <div className="text-center" style={{fontSize: "25px", fontWeight: "300", color: "white", paddingTop: "100px"}}>PROMOTED CONTENT</div>
-                                    </div>
-                                </div>
-                                <div className="col-12 pronotions">
-                                    <div className="rounded m-4" style={{background: "#d7e3da", height: "250px"}}>
-                                        <div className="text-center" style={{fontSize: "25px", fontWeight: "300", color: "white", paddingTop: "100px"}}>PROMOTED CONTENT</div>
-                                    </div>
-                                </div>
-                                <div className="col-12 pronotions">
-                                    <div className="rounded m-4" style={{background: "#d7e3da", height: "250px"}}>
-                                        <div className="text-center" style={{fontSize: "25px", fontWeight: "300", color: "white", paddingTop: "100px"}}>PROMOTED CONTENT</div>
-                                    </div>
-                                </div>
-                                <div className="col-12 pronotions">
-                                    <div className="rounded m-4" style={{background: "#d7e3da", height: "250px"}}>
-                                        <div className="text-center" style={{fontSize: "25px", fontWeight: "300", color: "white", paddingTop: "100px"}}>PROMOTED CONTENT</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={loading ? "loading-state modal fade show d-block blurred" : "modal fade"} tabIndex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-body" style={{ background: "transparent", border: "none", textAlign: "center" }}>
-                                <img src={Loading} style={{ height: "300px" }} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={check ? "loading-state modal fade show d-block blurred" : "modal fade"} tabIndex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content" style={{ background: "white", border: "1px solid #ccc", textAlign: "center",  }}>
-                            <div className="modal-body py-5">
-                                <h4 className="font-weight-normal">Do you really want to delete this post?</h4>
-                            </div>
-                            <div className="modal-footer justify-content-around">
-                                <button onClick={this.deletePost} className="btn btn-outline-danger btn-sm">Yes, I am sure</button>
-                                <button onClick={this.cancelDeletePost} className="btn btn-outline-primary btn-sm">No, go back</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </>
-        )
-    }
+	render() {
+		const {
+			title,
+			created,
+			image,
+			postedBy,
+			seriesName,
+			seriesId,
+			initializing,
+			check,
+			_id,
+			likes,
+			like,
+			comments,
+			summary,
+			thumbnail,
+			liking,
+			typeOf
+		} = this.state;
+		if (this.state.redirectToHome) {
+			return <Redirect to={'/'} />;
+		} else if (this.state.redirectToSignin) {
+			return <Redirect to={'/signin'} />;
+		}
+		return (
+			<>
+			<SeoHelmet title={title} desc={summary} image={`https://i.imgur.com/${thumbnail}m.png`} />
+			<AdLayout>
+				<div className="mx-auto max-w-screen-sm">
+				<div className="flex flex-wrap">
+					<h1 className="lg:text-3xl text-2xl text-white font-semibold">{title}</h1>
+					<div className="my-4 w-full flex flex-wrap pl-4 border-l-4 border-gray-700">
+						{seriesId !== process.env.REACT_APP_NONE_SERIES && (
+						<div className="w-full my-1 text-gray-300 text-sm hover:text-gray-500">
+							<Link to={`/series/${seriesId}`}>
+								<h6 className="inline">
+									<i className="fas fa-layer-group pr-2 mr-2 border-r border-gray-500" />
+									{seriesName}
+								</h6>
+							</Link>
+						</div>
+						)}
+						<div className="w-full my-1 text-gray-300 text-sm hover:text-gray-500">
+						<Link to={`/user/${postedBy._id}`}>
+							<h6 className="inline">
+								<i className="fas fa-user-secret pr-2 mr-2 border-r border-gray-500" />
+								{postedBy.name}
+							</h6>
+						</Link>
+						</div>
+						<div className="w-full my-1 text-gray-300 text-sm">
+							<h6 className="inline">
+								<i className="fas fa-hourglass-start pr-2 mr-2 border-r border-gray-500" />
+								{<Moment fromNow>{new Date(created)}</Moment>}
+							</h6>
+						</div>
+					</div>
+					{this.state.body !== "<p></p>" && (
+						<div className="w-full">
+							<div className="braft-output-content text-justify" dangerouslySetInnerHTML={this.createMarkup()} />
+						</div>
+					)}
+					<div className="w-full flex flex-wrap my-5">
+						{image &&
+							image.map((imgSrc, i) => (
+								<div className="w-full my-5 text-center bg-gray-800" key="i">
+									<Zoom>
+									<Img
+										className={typeOf == 'comic' ? "w-full object-cover" : "w-full object-contain max-h-500"}
+										src={`https://i.imgur.com/${imgSrc}l.png`}
+										alt="Post"
+										loader={<img src={LoaderSvg} className="h-20 mx-auto" />}
+									/>
+									</Zoom>
+								</div>
+							))}
+					</div>
+					{isAuthenticated().user &&
+						isAuthenticated().user._id === postedBy._id && (
+						<div className="w-full text-right">
+							<Link
+								to={`/post/edit/${_id}`}
+								className="px-2 py-1 text-gray-700 font-semibold tracking-wider bg-yellow-400 border-2 border-yellow-500 rounded text-sm hover:bg-yellow-500 mb-3 mr-4"
+							>
+								<i className="fas fa-pen mr-1"></i>Edit
+							</Link>
+							<button
+								onClick={this.checkDeletePost}
+								className="px-2 py-1 text-gray-700 font-semibold tracking-wider bg-pink-400 border-2 border-pink-500 rounded text-sm hover:bg-pink-500 mb-3"
+							>
+								<i className="fas fa-trash-restore-alt mr-1"></i>Delete
+							</button>
+						</div>
+						)}
+						{isAuthenticated().user &&
+							isAuthenticated().user.role === "admin" && (
+							<div className="w-full my-5">
+								<Link
+									to={`/post/edit/${_id}`}
+									className="px-4 py-1 bg-gray-700 border-2 border-gray-600 rounded-full text-white m-2 text-xs"
+								>
+									Admin Edit
+								</Link>
+								<button
+									onClick={this.checkDeletePost}
+									className="px-4 py-1 bg-gray-700 border-2 border-gray-600 rounded-full text-white m-2 text-xs"
+								>
+									Admin Delete
+								</button>
+							</div>
+							)}
+					<div className="w-full border-t border-b pt-4 pb-8 my-4 border-gray-400 shadow-sm">
+						<div className="flex">
+							<div className="w-1/2 relative">
+								<button
+									onClick={liking ? (e) => e.preventDefault() : this.likeToogle}
+									className={like ? "border border-yellow-400 rounded-full p-1" : "border border-white rounded-full p-1"}
+								>
+									{liking && <img src={LoaderSvg} className="h-10 mx-auto" />}
+									{!liking && <img src={like ? Clapping : Clap} alt="clap" className={like ? "h-10 mx-auto" :  "h-10 p-1 mx-auto"} />}
+								</button>
+								<span className={like ? "absolute text-xl text-yellow-400 left-0 top-0 ml-12 pl-4 mt-1" : "absolute text-xl text-gray-500 left-0 top-0 ml-12 pl-4 mt-1"}>
+									{likes.length < 10 ? `0${likes.length}` : `${likes.length}`}
+								</span>
+								{like ? (
+									<span className="absolute bottom-0 left-0 text-xs -mb-5 text-yellow-400">
+										You Clapped this post !
+									</span>
+								) : (
+									<span className="absolute bottom-0 left-0 text-xs -mb-5 text-gray-500">
+										Clap this post
+									</span>
+								)}
+							</div>
+							<div className="w-1/2 relative">
+								<Link to={`/user/${postedBy._id}`}>
+									<Img
+										src={`https://i.imgur.com/${postedBy.avatar}s.png`}
+										alt="Avatar"
+										className="h-10 w-10 rounded-full object-cover border-2 border-gray-800 shadow absolute top-0 right-0 mt-2"
+									/>
+									<span className="absolute top-0 right-0 mt-3 mr-12 text-sm text-white">
+										{postedBy.name}
+									</span>
+									<span className="absolute top-0 right-0 mt-8 mr-12 text-xs text-white">
+										Member Since {new Date(postedBy.created).getFullYear()}
+									</span>
+								</Link>
+							</div>
+						</div>
+					</div>
+					<div className="w-full">
+						<Comment postId={_id} ownerId={postedBy._id} comments={comments} updateComments={this.updateComments} />
+					</div>
+				</div>
+				</div>
+				<LoadingModal trigger={initializing} text="INITIALIZING" />
+				<Modal
+					isOpen={check}
+					contentLabel="Minimal Modal Example"
+					className="border-0 bg-transparent max-w-lg mx-auto mt-10"
+				>
+					<div
+						className="bg-gray-900 rounded py-5 px-10 border-gray-600 mt-10 mx-5 md:mx-0"
+						style={{ marginTop: 150 }}
+					>
+						<div className="my-5">
+							<h1 className="text-2xl text-white font-semibold pb-5">Warning !</h1>
+							<p className="text-sm text-white">Do you really want to delete this post ?</p>
+						</div>
+						<div className="mt-10 mb-5">
+							<button className="px-3 py-2 mr-2 rounded bg-white font-semibold" onClick={this.deletePost}>
+								Delete
+							</button>
+							<button
+								className="px-3 py-2 ml-2 rounded bg-white font-semibold"
+								onClick={this.cancelDeletePost}
+							>
+								Cancel
+							</button>
+						</div>
+					</div>
+				</Modal>
+			</AdLayout>
+			</>
+		);
+	}
 }
 
 export default SinglePost;

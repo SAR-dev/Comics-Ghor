@@ -1,0 +1,110 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:800);
+.not-found {
+    font-size: 200px;
+}
+.not-found #g-usetag {
+    stroke-width: 6;
+    stroke: #f2385a;
+    animation: gstrokeanim 2s infinite linear;
+}
+@keyframes gstrokeanim {
+    0% {
+        stroke-width: 6;
+   }
+    50% {
+        stroke-width: 0;
+   }
+    100% {
+        stroke-width: 6;
+   }
+}
+.not-found .text {
+    fill: none;
+    stroke-width: 6;
+    stroke-linejoin: round;
+    stroke-dasharray: 70 330;
+    stroke-dashoffset: 0;
+    -webkit-animation: stroke 6s infinite linear;
+    animation: stroke 6s infinite linear;
+}
+.not-found .text:nth-child(5n + 1) {
+    stroke: #f2385a;
+    -webkit-animation-delay: -1.2s;
+    animation-delay: -1.2s;
+}
+.not-found .text:nth-child(5n + 2) {
+    stroke: #f5a503;
+    -webkit-animation-delay: -2.4s;
+    animation-delay: -2.4s;
+}
+.not-found .text:nth-child(5n + 3) {
+    stroke: #e9f1df;
+    -webkit-animation-delay: -3.6s;
+    animation-delay: -3.6s;
+}
+.not-found .text:nth-child(5n + 4) {
+    stroke: #56d9cd;
+    -webkit-animation-delay: -4.8s;
+    animation-delay: -4.8s;
+}
+.not-found .text:nth-child(5n + 5) {
+    stroke: #3aa1bf;
+    -webkit-animation-delay: -6s;
+    animation-delay: -6s;
+}
+@-webkit-keyframes stroke {
+    100% {
+        stroke-dashoffset: -400;
+   }
+}
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: -400;
+   }
+}
+.not-found .text1 {
+    fill: none;
+    stroke-linejoin: round;
+    stroke-dasharray: 1160;
+    stroke-dashoffset: 1160;
+    -webkit-animation: vstroke 6s infinite linear;
+    animation: vstroke 6s infinite ease-in-out;
+}
+.not-found .text1:nth-child(3n+3) {
+    stroke-width: 4;
+    stroke: #3aa1bf;
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+}
+.not-found .text1:nth-child(3n+1) {
+    stroke: yellow;
+    stroke-width: 1;
+    -webkit-animation-delay: 0.2s;
+    animation-delay: -0.2s;
+}
+.not-found .text1:nth-child(3n+2) {
+    stroke: red;
+    stroke-width: 2;
+    -webkit-animation-delay: -0.1s;
+    animation-delay: -0.1s;
+}
+@keyframes vstroke {
+    100% {
+        stroke-dashoffset: 0;
+   }
+}
+.not-found html, .not-found body {
+    height: 100%;
+}
+.not-found body {
+    background: #212121;
+    background-size: 0.2em 100%;
+    font: 14.5em Open Sans, Impact;
+    text-transform: uppercase;
+    margin: 0;
+}
+.not-found svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}

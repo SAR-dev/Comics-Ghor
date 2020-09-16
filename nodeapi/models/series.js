@@ -13,6 +13,9 @@ const seriesSchema = new mongoose.Schema({
     summary: {
         type: String,
     },
+    shortSummary: {
+        type: String
+    },
     createdBy: {
         type: ObjectId,
         ref: "User"
@@ -20,7 +23,21 @@ const seriesSchema = new mongoose.Schema({
     created: {
         type: Date,
         default: Date.now
-    }
+    },
+    comments: [
+        {
+            text: String,
+            image: String,
+            created: {type: Date, default: Date.now},
+            postedBy: {type: ObjectId, ref: "User"}
+        }
+    ],
+    score: [
+        {
+            score: String,
+            postedBy: {type: ObjectId, ref: "User"}
+        }
+    ],
 });
 
 module.exports = mongoose.model('Series', seriesSchema);

@@ -6,9 +6,7 @@ exports.createPostValidator = (req, res, next) => {
         max: 100
     });
     //body check
-    req.check('body', 'Body is required').notEmpty();
-    req.check('body', 'Body must be between 4 to 20000 characters').isLength({
-        min: 4,
+    req.check('body', 'Body must contain maximum 20000 characters').isLength({
         max: 20000
     });
     //error check

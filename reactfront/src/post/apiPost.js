@@ -38,35 +38,38 @@ export const listSeries = () => {
         })
         .catch(err => console.log(err));
 };
+export const listCat = () => {
+    return fetch(`${process.env.REACT_APP_API_URL}/cat`, {
+        method: "GET"
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
 
-export const list = () => {
-    return fetch(`${process.env.REACT_APP_API_URL}/posts`, {
-        method: "GET",
+// export const list = () => {
+//     return fetch(`${process.env.REACT_APP_API_URL}/posts`, {
+//         method: "GET",
+//     })
+//     .then(response => {
+//         return response.json()
+//     })
+//     .catch(err => console.log(err))
+// };
+export const list = page => {
+    return fetch(`${process.env.REACT_APP_API_URL}/posts/?page=${page}`, {
+        method: "GET"
     })
-    .then(response => {
-        return response.json()
-    })
-    .catch(err => console.log(err))
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
 };
 
 export const singlePost = (postId) => {
     return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`, {
         method: "GET",
-    })
-    .then(response => {
-        return response.json()
-    })
-    .catch(err => console.log(err))
-};
-
-export const listByUser = (userId, token) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/posts/by/${userId}`, {
-        method: "GET",
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-        },
     })
     .then(response => {
         return response.json()
@@ -104,7 +107,7 @@ export const update = (postId, token, post) => {
     .catch(err => console.log(err))
 };
 
-export const like = (userId, token, postId) => {
+export const like = (userId, token, postId, ownerId) => {
     return fetch(`${process.env.REACT_APP_API_URL}/post/like`, {
         method: "PUT",
         headers: {
@@ -112,7 +115,7 @@ export const like = (userId, token, postId) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({userId, postId})
+        body: JSON.stringify({userId, postId, ownerId})
     })
     .then(response => {
         return response.json()
@@ -120,7 +123,7 @@ export const like = (userId, token, postId) => {
     .catch(err => console.log(err))
 };
 
-export const unlike = (userId, token, postId) => {
+export const unlike = (userId, token, postId, ownerId) => {
     return fetch(`${process.env.REACT_APP_API_URL}/post/unlike`, {
         method: "PUT",
         headers: {
@@ -128,7 +131,7 @@ export const unlike = (userId, token, postId) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({userId, postId})
+        body: JSON.stringify({userId, postId, ownerId})
     })
     .then(response => {
         return response.json()
@@ -136,7 +139,7 @@ export const unlike = (userId, token, postId) => {
     .catch(err => console.log(err))
 };
 
-export const comment = (userId, token, postId, comment) => {
+export const comment = (userId, token, postId, comment, ownerId) => {
     return fetch(`${process.env.REACT_APP_API_URL}/post/comment`, {
         method: "PUT",
         headers: {
@@ -144,7 +147,7 @@ export const comment = (userId, token, postId, comment) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({userId, postId, comment})
+        body: JSON.stringify({userId, postId, comment, ownerId})
     })
     .then(response => {
         return response.json()
@@ -152,7 +155,7 @@ export const comment = (userId, token, postId, comment) => {
     .catch(err => console.log(err))
 };
 
-export const uncomment = (userId, token, postId, comment) => {
+export const uncomment = (userId, token, postId, comment, ownerId) => {
     return fetch(`${process.env.REACT_APP_API_URL}/post/uncomment`, {
         method: "PUT",
         headers: {
@@ -160,7 +163,7 @@ export const uncomment = (userId, token, postId, comment) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({userId, postId, comment})
+        body: JSON.stringify({userId, postId, comment, ownerId})
     })
     .then(response => {
         return response.json()

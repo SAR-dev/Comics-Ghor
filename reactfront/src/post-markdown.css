@@ -1,0 +1,137 @@
+.braft-output-content {
+    color: #fff
+}
+
+.braft-output-content .media-wrap {
+    display: block;
+    width: 100%;
+}
+
+@media only screen and (min-width: 768px){
+    .braft-output-content .media-wrap iframe{
+        margin-top: 15px !important;
+        margin-bottom: 15px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: center !important;
+        width: 100% !important;
+        height: 350px
+    }    
+}
+
+@media only screen and (max-width: 768px){
+    .braft-output-content .media-wrap iframe{
+        margin-top: 15px !important;
+        margin-bottom: 15px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        text-align: center !important;
+        width: 100% !important;
+        height: 250px
+    }    
+}
+
+
+.braft-output-content a {
+    color: #3182CE;
+    font-weight: 600;
+}
+
+.braft-output-content a:hover {
+    color: #2B6CB0
+}
+
+.braft-output-content img {
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+    max-height: 500px;
+}
+
+.braft-output-content ul, .braft-output-content ol {
+    margin: 16px 0;
+    padding: 0
+}
+
+.braft-output-content blockquote {
+    margin: 0 0 10px;
+    padding: 15px 20px;
+    background-color: #4A5568;
+    border-left: 5px solid #2D3748;
+    color: #fff;
+    font-style: italic;
+}
+
+.braft-output-content pre {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    overflow: auto;
+    background-color: #f1f2f3;
+    border-radius: 3px;
+    color: #666;
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 16px;
+    word-wrap: break-word;
+    white-space: pre-wrap
+}
+
+.braft-output-content pre pre {
+    margin: 0;
+    padding: 0
+}
+
+.braft-output-content h1, .braft-output-content h1 span {
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+}
+.braft-output-content h2, .braft-output-content h2 span {
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+.braft-output-content h3, .braft-output-content h3 span {
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+.braft-output-content h4, .braft-output-content h4 span {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+.braft-output-content h5, .braft-output-content h5 span {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+.braft-output-content h6, .braft-output-content h6 span {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+@media only screen and (min-width: 768px){
+    .braft-output-content p, .braft-output-content p span {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 10px 0;
+        min-height: 1em;
+    }
+}
+
+@media only screen and (max-width: 768px){
+    .braft-output-content p, .braft-output-content p span {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.5;
+        margin: 5px 0;
+        min-height: 1em;
+    }
+}

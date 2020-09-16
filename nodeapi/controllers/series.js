@@ -1,4 +1,5 @@
 const Series = require('../models/series');
+const User = require('../models/user');
 const formidable = require('formidable');
 const fs = require('fs');
 const _ = require('lodash');
@@ -6,7 +7,7 @@ const _ = require('lodash');
 exports.getSeries = (req, res) => {
     const series = Series.find()
         .populate("createdBy", "_id name avatar")
-        .select('_id name image summary createdBy')
+        .select('_id name image shortSummary created createdBy')
         .then((series) => {
             res.json({ series })
         })
@@ -59,7 +60,10 @@ exports.seriesByUser = (req, res) => {
 };
 
 exports.isCreator = (req, res, next) => {
-    let isCreator = req.series && req.auth && req.series.createdBy._id == req.auth._id
+    let sameUser = req.series && req.auth && req.series.createdBy._id == req.auth._id
+    let admin = req.post && req.auth && req.auth.role === "admin"
+    let isCreator = sameUser || admin
+    
     if(!isCreator) {
         return res.status(403).json({
             error: "User is not authorized"
@@ -88,6 +92,7 @@ exports.singleSeries = (req, res) => {
 };
 
 exports.deleteSeries = (req, res) => {
+    console.log(req.profile)
     let series = req.series
     series.remove((err, series) => {
         if(err) {
@@ -131,17 +136,75 @@ exports.updateSeries = (req, res, next) => {
     });
 };
 
-// exports.updateSeries = (req, res, next) => {
-//     let series = req.series;
-//     series = _.extend(series, req.body);
-//     series.updated = Date.now();
-//     series.save((err) => {
-//         if(err) {
-//             return res.status(400).json({
-//                 error: err
-//             })
-//         }
-//         res.json(series);
-//     })
-// };
+exports.addPoints = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.profile._id, 
+        {$push: {points: 15}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
 
+exports.removePoints = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.series.createdBy._id, 
+        {$push: {points: -25}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.comment = (req, res) => {
+    let comment = req.body.comment
+    comment.postedBy = req.body.userId
+
+    Series.findByIdAndUpdate(req.body.seriesId,
+        {
+            $push:
+                { comments: comment }
+        },
+        { new: true }
+    )
+    .populate('comments.postedBy', '_id name avatar')
+    .populate('postedBy', '_id name')
+    .exec((err, result) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            })
+        } else {
+            res.json(result)
+        }
+    })
+};
+
+exports.uncomment = (req, res) => {
+    let comment = req.body.comment
+
+    Series.findByIdAndUpdate(req.body.seriesId,
+        {
+            $pull:
+                { comments: {_id: comment._id} }
+        },
+        { new: true }
+    )
+    .populate('comments.postedBy', '_id name avatar')
+    .populate('postedBy', '_id name')
+    .exec((err, result) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            })
+        } else {
+            res.json(result)
+        }
+    })
+};

@@ -42,7 +42,7 @@ class SocialLogin extends Component {
         }
         return (
             <p className="social-btn">
-                {/* <button href="" className="btn btn-google"><i class="fab fa-google"></i> Sign in with Google</button> */}
+                {/* <button href="" className="btn btn-google"><i className="fab fa-google"></i> Sign in with Google</button> */}
                 {/* <a href="" className="btn btn-facebook float-right"> <i className="fab fa-facebook-f"></i> Sign in with Facebook</a> */}
                 <GoogleLogin
                     clientId="332113154440-17tkstjc5hjn5at28t7388najb29c6ph.apps.googleusercontent.com"

@@ -1,3 +1,18 @@
+export const preSignup = (user) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/pre-signup`, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+    })
+        .then(response => {
+            return response.json()
+        })
+        .catch(err => console.log(err))
+};
+
 export const signup = (user) => {
     return fetch(`${process.env.REACT_APP_API_URL}/signup`, {
         method: "POST",
@@ -38,6 +53,12 @@ export const signin = (user) => {
 export const signout = (next) => {
     if (typeof window !== "undefined") {
         localStorage.removeItem("jwtC")
+        localStorage.removeItem("id")
+        localStorage.removeItem("photoUrl")
+        localStorage.removeItem("nickname")
+        localStorage.removeItem("messages")
+        localStorage.removeItem("users")
+        localStorage.removeItem("added")
     }
     next()
     return fetch(`${process.env.REACT_APP_API_URL}/signout`, {

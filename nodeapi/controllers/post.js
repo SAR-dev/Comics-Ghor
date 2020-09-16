@@ -1,20 +1,36 @@
 const Post = require('../models/post');
-const formidable = require('formidable');
+const formidable = require('formidable'); // module for parsing form data, especially file uploads.
 const fs = require('fs');
 const Series = require('../models/series');
-const _ = require('lodash');
+const Cat = require('../models/cat');
+const User = require('../models/user');
+const _ = require('lodash'); // working with arrays, numbers, objects, strings, etc
 
-exports.getPosts = (req, res) => {
-    const posts = Post.find()
-        .populate("postedBy", "_id name avatar")
-        .select('_id title body created image likes')
-        .sort({ created: -1 })
-        .populate("seriesOf", "name")
-        .then((posts) => {
-            res.json(posts)
+exports.getPosts = async (req, res) => {
+    // get current page from req.query or use default value of 1
+    const currentPage = req.query.page || 1;
+    // return 3 posts per page
+    const perPage = 6;
+    let totalItems;
+
+    const posts = await Post.find()
+        // countDocuments() gives you total count of posts
+        .countDocuments()
+        .then(count => {
+            totalItems = count;
+            return Post.find()
+            
+            .skip((currentPage - 1) * perPage)
+                .populate("postedBy", "_id name avatar")
+                .populate("seriesOf", "name")
+                .sort({ created: -1 })
+                .limit(perPage)
+                .select('_id title summary created thumbnail likes commentsCount')
+        .then(posts => {
+            res.status(200).json(posts);
         })
-        .catch(err => console.log(err))
-};
+        .catch(err => console.log(err));
+})}
 
 exports.createPost = (req, res, next) => {
     let form = new formidable.IncomingForm();
@@ -59,7 +75,7 @@ exports.createPost = (req, res, next) => {
 exports.postsByUser = (req, res) => {
     Post.find({ postedBy: req.profile._id })
         .populate("postedBy", "_id name avatar")
-        .select('_id title created image likes')
+        .select('_id title created thumbnail')
         .sort("_created")
         .exec((err, posts) => {
             if (err) {
@@ -70,13 +86,14 @@ exports.postsByUser = (req, res) => {
             res.json(posts)
         })
 };
-
+ 
 exports.postsById = (req, res, next, id) => {
     Post.findById(id)
         .populate("postedBy", "_id name avatar created")
-        .populate('comments.postedBy', '_id name avatar')
+        .populate('comments.postedBy', '_id name avatar role')
         .populate("seriesOf", "name")
-        .select('_id title body created likes comments image')
+        .populate("catOf", "name")
+        .select('_id title body created likes comments image thumbnail summary')
         .exec((err, post) => {
             if (err || !post) {
                 return res.status(400).json({
@@ -89,7 +106,9 @@ exports.postsById = (req, res, next, id) => {
 };
 
 exports.isPoster = (req, res, next) => {
-    let isPoster = req.post && req.auth && req.post.postedBy._id == req.auth._id
+    let sameUser = req.post && req.auth && req.post.postedBy._id == req.auth._id
+    let admin = req.post && req.auth && req.auth.role === "admin"
+    let isPoster = sameUser || admin
     if (!isPoster) {
         return res.status(403).json({
             error: "User is not authorized"
@@ -183,6 +202,105 @@ exports.unlike = (req, res) => {
     })
 };
 
+exports.addPointsForLikeOwner = (req, res, next) => {
+    let likeNot = {}
+    likeNot.user = req.body.userId
+    likeNot.post = req.body.postId
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$push: {points: 1, likeNot: likeNot}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.addPointsForLikeUser = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.userId,
+        {$push: {points: 1}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removeNotiForLike = (req, res, next) => {
+    let likeNot = {}
+    likeNot.user = req.body.userId
+    likeNot.post = req.body.postId
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$pull: {likeNot: likeNot}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removePointsForLikeOwner = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$push: {points: -1}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removePointsForLikeUser = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.userId,
+        {$push: {points: -1}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.addComment = (req, res, next) => {
+    Post.findByIdAndUpdate(
+        req.body.postId, 
+        {$push: {commentsCount: 1}},
+        (err, result) => {
+            console.log(err)
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removeComment = (req, res, next) => {
+    Post.findByIdAndUpdate(
+        req.body.postId, 
+        {$push: {commentsCount: -1}},
+        (err, result) => {
+            console.log(err)
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
 exports.comment = (req, res) => {
     let comment = req.body.comment
     comment.postedBy = req.body.userId
@@ -230,6 +348,77 @@ exports.uncomment = (req, res) => {
     })
 };
 
+exports.addPointsForCommentOwner = (req, res, next) => {
+    let commentNot = {}
+    commentNot.user = req.body.userId
+    commentNot.post = req.body.postId
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$push: {points: 2, commentNot: commentNot}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.addPointsForCommentUser = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.userId,
+        {$push: {points: 2}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removeNotiForComment = (req, res, next) => {
+    let commentNot = {}
+    commentNot.user = req.body.userId
+    commentNot.post = req.body.postId
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$pull: {commentNot: commentNot}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removePointsForCommentOwner = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.ownerId,
+        {$push: {points: -2}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removePointsForCommentUser = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.body.userId,
+        {$push: {points: -2}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
 exports.getPostsBySeries = (req, res, next, id) => {
     Post.find({ seriesOf: id })
         .select('_id title created')
@@ -244,6 +433,76 @@ exports.getPostsBySeries = (req, res, next, id) => {
         })
 };
 
+
 exports.postsBySeries = (req, res) => {
     return res.json(req.posts);
 };
+
+exports.getPostsByCat = (req, res, next, id) => {
+    Post.find({ catOf: id })
+        .populate("postedBy", "_id name avatar")
+        .populate("seriesOf", "name")
+        .populate("catOf", "name")
+        .sort({ created: -1 })
+        .select('_id title summary created thumbnail likes')
+        .exec((err, posts) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            req.posts = posts;
+            next();
+        })
+};
+
+exports.postsByCat = (req, res) => {
+    console.log(req.posts)
+    return res.json(req.posts);
+};
+
+exports.listSearch = (req, res) => {
+    const { search } = req.query;
+    if (search) {
+        Post.find(
+            {
+                $or: [{ title: { $regex: search, $options: 'i' } }, { body: { $regex: search, $options: 'i' } }]
+            },
+            (err, posts) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    });
+                }
+                res.json(posts);
+            }
+        ).select('-image -body -likes -comments -postedBy -seriesOf');
+    }
+};
+
+exports.addPoints = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.profile._id, 
+        {$push: {points: 5}},
+        (err, result) => {
+            console.log(err)
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
+
+exports.removePoints = (req, res, next) => {
+    User.findByIdAndUpdate(
+        req.post.postedBy._id, 
+        {$push: {points: -5}},
+        (err, result) => {
+            if(err) {
+                return res.status(400).json({error: err});
+            }
+            next();
+        }
+    )
+}
